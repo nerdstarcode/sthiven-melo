@@ -2,8 +2,8 @@ import Link from 'next/link';
 import React from 'react';
 import Logo from '../Logo';
 import { useRouter, NextRouter } from 'next/router';
-import { TwitterIcon } from '../Icons';
-
+import { DribbbleIcon, GithubIcon, LinkedInIcon, PinterestIcon, TwitterIcon } from '../Icons';
+import {motion} from 'framer-motion'
 export interface CustomLinkProps {
   href: string;
   classname?: string;
@@ -12,7 +12,6 @@ export interface CustomLinkProps {
   children?: React.ReactNode;
 }
 const CustomLink = ({ href, classname = '', target, router, children }: CustomLinkProps) => {
-  console.log(router)
   return (
     <Link href={href} className={`${classname} relative group`} target={target}>
       {children}
@@ -33,12 +32,12 @@ export default function NavBar() {
         <CustomLink href='/projects' children='Projects' router={router}/>
         <CustomLink href='/articles' children='Articles' router={router}/>
       </nav>
-      <nav>
-        <CustomLink href='/' children={<TwitterIcon/>} target='_blank'/>
-        <CustomLink href='/' children='T' target='_blank'/>
-        <CustomLink href='/' children='T' target='_blank'/>
-        <CustomLink href='/' children='T' target='_blank'/>
-        <CustomLink href='/' children='T' target='_blank'/>
+      <nav className='flex items-center justify-center flex-wrap gap-4 '>
+        <motion.a href='/' children={<TwitterIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
+        <motion.a href='/' children={<DribbbleIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
+        <motion.a href='/' children={<GithubIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
+        <motion.a href='/' children={<LinkedInIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
+        <motion.a href='/' children={<PinterestIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
       </nav>
       <div className='absolute left-1/2 top-2 -translate-x-1/2'>
         <Logo />
