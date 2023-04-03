@@ -35,8 +35,8 @@ export default function NavBar() {
       <nav className='flex items-center justify-center flex-wrap gap-4 '>
         <motion.a href='/' children={<TwitterIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
         <motion.a href='/' children={<DribbbleIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
-        <motion.a href='/' children={<GithubIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
-        <motion.a href='/' children={<LinkedInIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
+        <motion.a href='https://github.com/nerdstarcode' children={<GithubIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
+        <motion.a href='https://www.linkedin.com/in/sthiven-melo-a67a1722b/' children={<LinkedInIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
         <motion.a href='/' children={<PinterestIcon/>} target='_blank' whileHover={{y:-2}} className='w-6' whileTap={{scale:0.9}}/>
       </nav>
       <div className='absolute left-1/2 top-2 -translate-x-1/2'>
