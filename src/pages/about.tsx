@@ -34,6 +34,7 @@ const AnimatedNumbers = ({ value }: any) => {
 
   return (
     <span ref={ref}>
+      {value}
     </span>
   )
 }
@@ -68,10 +69,6 @@ const text = {
 export default function About() {
   const [language, setLanguage] = useState<'pt' | 'es' | 'en'>('pt');
   const [image, setImage] = useState(aboutpicture)
-  useEffect(()=>{
-    const paginaAnterior = router.query.nome
-    console.log(paginaAnterior)
-  })
   return (
     <>
       <Head>

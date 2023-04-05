@@ -18,7 +18,7 @@ export interface CustomLinkProps {
 }
 const CustomLink = ({ href, as, classname = '', target, router, children }: CustomLinkProps) => {
   return (
-    <Link href={href} as={as} className={`${classname} relative group`} target={target} onClick={() => { router?.pathname === href.pathname ? console.log('mesmo caminho') : console.log(router?.pathname, href) }} >
+    <Link href={href} as={as} className={`${classname} relative group`} target={target}  >
       {children}
       <span className={`h-[1px] inline-block bg-dark absolute left-0 bottom-0.5 group-hover:w-full transition-[width] ease duration-300
       ${router?.pathname === href.pathname || router?.pathname === href ? 'w-full' : 'w-0'}
