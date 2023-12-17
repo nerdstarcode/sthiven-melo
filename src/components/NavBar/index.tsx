@@ -18,9 +18,9 @@ export interface CustomLinkProps {
 }
 const CustomLink = ({ href, as, classname = '', target, router, children }: CustomLinkProps) => {
   return (
-    <Link href={href} as={as} className={`${classname} relative group`} target={target}  >
+    <Link href={href} as={as} className={`${classname} relative group dark:text-zinc-400`} target={target}  >
       {children}
-      <span className={`h-[1px] inline-block bg-dark absolute left-0 bottom-0.5 group-hover:w-full transition-[width] ease duration-300
+      <span className={`h-[1px] inline-block bg-dark dark:bg-yellow-400 absolute left-0 bottom-0.5 group-hover:w-full transition-[width] ease duration-300
       ${router?.pathname === href.pathname || router?.pathname === href ? 'w-full' : 'w-0'}
       `}>&nbsp;</span>
     </Link>
@@ -32,8 +32,8 @@ export default function NavBar() {
   return (
     <header className='w-full px-32 py-8 font-medium flex items-center justify-between'>
       <nav className='flex gap-4'>
-        <CustomLink href={{ pathname: '/', query: { nome: 'home' } }} as="/home" children='Home' router={router} />
-        <CustomLink href={{ pathname: '/about', query: { nome: 'about' } }} as="/" children='About' router={router} />
+        <CustomLink href={{ pathname: '/', query: { nome: 'Home', object: '', como: '', valor: '' } }} as="/" children='Home' router={router} />
+        <CustomLink href={{ pathname: '/about', query: { nome: 'about' } }} as="/about" children='About' router={router} />
         <CustomLink href='/projects' children='Projects' router={router} />
         <CustomLink href='/articles' children='Articles' router={router} />
       </nav>

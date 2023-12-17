@@ -7,7 +7,7 @@ import aboutpicturelight from '@p/aboutpicturelight.jpg'
 import aboutpicture from '@p/aboutpicture.jpg'
 import aboutpicturehover from '@p/aboutpicturehover.jpg'
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ImageTry from '@/components/ImageTry';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
@@ -20,18 +20,23 @@ const AnimatedNumbers = ({ value }: any) => {
   const springValue = useSpring(motionValue, { duration: 3000 });
   const isInView = useInView(ref as IntersectionOptions)
 
-  useEffect(()=>{
-    if(isInView){
+  useEffect(() => {
+    if (isInView) {
       motionValue.set(value);
     }
   }, [isInView, value, motionValue])
-
-  useEffect(()=>{
-    springValue.on("change", (latest)=>{
+  
+  if (typeof window !== 'undefined') {
+    useLayoutEffect(() => {
+      router?.query?.nome !== 'about' ? console.log('Não devia estar aqui') : console.log('ta tudo bem', router?.query)
+      router?.query?.nome !== 'about' ? router.push('/') : console.log('ta tudo bem')
+    }, [router?.query])
+  }
+  useEffect(() => {
+    springValue.on("change", (latest) => {
       // console.log(latest)
     });
   }, [springValue, value])
-
   return (
     <span ref={ref}>
       {value}
@@ -69,6 +74,7 @@ const text = {
 export default function About() {
   const [language, setLanguage] = useState<'pt' | 'es' | 'en'>('pt');
   const [image, setImage] = useState(aboutpicture)
+
   return (
     <>
       <Head>
@@ -90,32 +96,33 @@ export default function About() {
               }
 
             </article>
-            <aside className='col-span-3 relative h-full rounded-2xl border-2 border-solid border-dark bg-light p-8'>
+            <aside className='col-span-3 relative h-full rounded-2xl border-2 border-solid border-dark bg-light dark:dark:bg-zinc-900 p-8'>
               <ImageTry />
               <div className='absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-3xl bg-dark' />
             </aside>
             <div className='col-span-2 flex flex-col justify-between items-end'>
               <div className='flex flex-col items-end justify-center'>
                 <span className='inline-block text-7xl font-bold'>
-                  <AnimatedNumbers value={50}/>+
+                  <AnimatedNumbers value={50} />+
                 </span>
-                <h3 className='text-xl font-medium capitalize text-dark/75'>{text[language]?.repos}</h3>
+                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.repos}</h3>
               </div>
               <div className='flex flex-col items-end justify-center'>
                 <span className='inline-block text-7xl font-bold'>
                   30+
                 </span>
-                <h3 className='text-xl font-medium capitalize text-dark/75'>{text[language]?.curses}</h3>
+                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.curses}</h3>
               </div>
               <div className='flex flex-col items-end justify-center'>
                 <span className='inline-block text-7xl font-bold'>
                   1+
                 </span>
-                <h3 className='text-xl font-medium capitalize text-dark/75'>{text[language]?.yearExperience}</h3>
+                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.yearExperience}</h3>
               </div>
             </div>
           </section>
         </Layout>
+        <button onClick={() => { console.log(router) }}> log</button>
       </main>
     </>
   )

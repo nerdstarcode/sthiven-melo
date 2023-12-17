@@ -12,7 +12,7 @@ const montserrat = Montserrat({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className={`${montserrat.variable} font-mont bg-light w-full min-h-screen`}>
+    <main className={`${montserrat.variable} font-mont bg-light w-full min-h-screen dark:text-zinc-400 dark:bg-zinc-900`}>
       <NavBar/>
       <Component/>
       <Footer/>
