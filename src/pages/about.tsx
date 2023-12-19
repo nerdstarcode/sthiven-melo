@@ -25,11 +25,10 @@ const AnimatedNumbers = ({ value }: any) => {
       motionValue.set(value);
     }
   }, [isInView, value, motionValue])
-  
+
   if (typeof window !== 'undefined') {
     useLayoutEffect(() => {
-      router?.query?.nome !== 'about' ? console.log('Não devia estar aqui') : console.log('ta tudo bem', router?.query)
-      router?.query?.nome !== 'about' ? router.push('/') : console.log('ta tudo bem')
+      router?.query?.nome !== 'about' ? router.push('/') : ''
     }, [router?.query])
   }
   useEffect(() => {
@@ -48,7 +47,11 @@ const text = {
   pt: {
     main: 'A paixão alimenta o propósito!',
     biography: 'Biografia',
-    about: "Hi, I'm CodeBucks, a web developer and UI/UX designer with a passion for creating beautiful, functional, and user-centered digital experiences. With 4 years of experience in the field. I am always looking for new and innovative ways to bring my clients' visions to life.\nI believe that design is about more than just making things look pretty – it's about solving problems and creating intuitive, enjoyable experiences for users. \n Whether I'm working on a website, mobile app, or other digital product, I bring my commitment to design excellence and user-centered thinking to every project I work on. I look forward to the opportunity to bring my skills and passion to your next project.",
+    about: `
+    Meu nome é Sthiven Raphael Melo Correia e hoje sou estagiário na empresa NTT DATA, tive um longo caminho para chegar até onde estou e fiz muitas curvas. Iniciei estudando licenciatura plena em física na UFRRJ, participei de iniciação científica em energia e matéria escura no Observatório Nacional e hoje em dia ajudo a melhorar a qualidade de vida de outros trabalhadores através do código
+    Tenho foco em backend, mas não consigo focar nele sem entender os entornos, então também tenho bastante experiência em front e quebro uns galhos na parte de design. No momento tenho estudado a parte de devops.
+    Sou uma pessoa simples e geralmente bem alegre, meu foco na carreira é ser o melhor que eu posso ser e ajudar o máximo de pessoas que eu puder.
+    `,
     repos: 'Repositórios',
     curses: 'Cursos completos',
     yearExperience: 'Anos de experiência'
@@ -89,7 +92,7 @@ export default function About() {
               <h2 className='mb-4 text-lg font-bold uppercase text-dark/75'>{text[language]?.biography}</h2>
               {
                 text[language]?.about.split("\n").map((paragraph, index) => {
-                  return <p key={`paragraph-${index}`} className='font-medium [&:not(:last-child)]:mb-4' >
+                  return <p key={`paragraph-${index}`} className='font-medium [&:not(:last-child)]:mb-4 text-justify' >
                     {paragraph}
                   </p>
                 })
@@ -122,7 +125,7 @@ export default function About() {
             </div>
           </section>
         </Layout>
-        <button onClick={() => { console.log(router) }}> log</button>
+
       </main>
     </>
   )
