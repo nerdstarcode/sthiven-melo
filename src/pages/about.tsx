@@ -79,16 +79,16 @@ export default function About() {
   const [image, setImage] = useState(aboutpicture)
 
   return (
-    <>
+    <div className='h-fit'>
       <Head>
         <title>NerdStarCode | About Page</title>
         <meta name='description' content='sobre minha trajetória no desnvolvimento'></meta>
       </Head>
       <main className='flex w-full flex-col items-center justify-center'>
         <Layout classname='pt-16'>
-          <AnimatedText text={text[language]?.main} className='mb-16' />
-          <section className='grid w-full max-h-screen grid-cols-8 gap-16'>
-            <article className='col-span-3 flex flex-col items-star justify-start '>
+          <AnimatedText text={text[language]?.main} className='md:mb-16' />
+          <section className='grid grid-cols-3 w-full md:max-h-screen md:grid-cols-8 gap-16'>
+            <article className='col-span-2 md:col-span-3 flex flex-col items-star justify-start '>
               <h2 className='mb-4 text-lg font-bold uppercase text-dark/75'>{text[language]?.biography}</h2>
               {
                 text[language]?.about.split("\n").map((paragraph, index) => {
@@ -99,34 +99,34 @@ export default function About() {
               }
 
             </article>
-            <aside className='col-span-3 relative h-full rounded-2xl border-2 border-solid border-dark bg-light dark:dark:bg-zinc-900 p-8'>
+            <aside className='md:col-span-3 relative h-full rounded-2xl border-2 border-solid border-dark bg-light dark:dark:bg-zinc-900 p-8'>
               <ImageTry />
               <div className='absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-3xl bg-dark' />
             </aside>
-            <div className='col-span-2 flex flex-col justify-between items-end'>
+            <div className='col-span-3 md:col-span-2 flex md:flex-col justify-between items-end'>
               <div className='flex flex-col items-end justify-center'>
-                <span className='inline-block text-7xl font-bold'>
+                <span className='inline-block text-3xl sm:text-6xl md:text-7xl font-bold'>
                   <AnimatedNumbers value={50} />+
                 </span>
-                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.repos}</h3>
+                <h3 className='text-xs sm:text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.repos}</h3>
               </div>
               <div className='flex flex-col items-end justify-center'>
-                <span className='inline-block text-7xl font-bold'>
+                <span className='inline-block text-3xl sm:text-6xl md:text-7xl font-bold'>
                   30+
                 </span>
-                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.curses}</h3>
+                <h3 className='text-xs sm:text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.curses}</h3>
               </div>
               <div className='flex flex-col items-end justify-center'>
-                <span className='inline-block text-7xl font-bold'>
+                <span className='inline-block text-3xl sm:text-6xl md:text-7xl font-bold'>
                   1+
                 </span>
-                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.yearExperience}</h3>
+                <h3 className='text-xs sm:text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.yearExperience}</h3>
               </div>
             </div>
           </section>
         </Layout>
 
       </main>
-    </>
+    </div>
   )
 }

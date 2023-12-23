@@ -1,4 +1,5 @@
 import Footer from '@/components/Footer'
+import Logo from '@/components/Logo'
 import NavBar from '@/components/NavBar'
 import { DataContextProvider } from '@/contexts/WorkContext'
 import '@/styles/globals.css'
@@ -19,6 +20,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <NavBar />
         <Component />
         <Footer />
+        <div className='md:hidden sticky flex bottom-0 h-20 rounded-lg bg-black/50 backdrop-blur-md'>
+          <div className='m-auto w-2/4 '>
+            <Logo />
+          </div>
+        </div>
       </DataContextProvider>
     </main>
   )

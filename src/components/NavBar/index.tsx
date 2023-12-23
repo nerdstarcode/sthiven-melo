@@ -32,7 +32,7 @@ import instagram from '@p/insta.svg'
 export default function NavBar() {
   const router = useRouter()
   return (
-    <header className='w-full px-32 py-8 font-medium flex items-center justify-between'>
+    <header className='w-full px-16 md:px-32 py-8 font-medium flex items-center justify-between'>
       <nav className='flex gap-4'>
         <CustomLink href={{ pathname: '/', query: { nome: 'Home', object: '', como: '', valor: '' } }} as="/" children='Home' router={router} />
         <CustomLink href={{ pathname: '/about', query: { nome: 'about' } }} as="/about" children='About' router={router} />
@@ -46,7 +46,7 @@ export default function NavBar() {
         <motion.a href='https://www.linkedin.com/in/sthiven-melo-a67a1722b/' children={<LinkedInIcon />} target='_blank' whileHover={{ y: -2 }} className='w-6' whileTap={{ scale: 0.9 }} />
         {/* <motion.a href='/' children={<PinterestIcon />} target='_blank' whileHover={{ y: -2 }} className='w-6' whileTap={{ scale: 0.9 }} /> */}
       </nav>
-      <div className='absolute left-1/2 top-2 -translate-x-1/2'>
+      <div className='hidden md:block absolute left-1/2 top-2 -translate-x-1/2'>
         <Logo />
       </div>
     </header>

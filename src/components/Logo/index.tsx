@@ -8,10 +8,10 @@ const MotionLink = motion(Link)
 export default function Logo() {
   const { dataContext, setDataContextData } = useDataContext();
   return (
-    <div className='grid grid-cols-5 items-center justify-center mt-2 gap-4 group text-center'>
+    <div className='grid-cols-5 center items-center justify-center mt-2 gap-4 group text-center grid'>
       <div className='h-full'>
       </div>
-      <div className='h-full relative'>
+      <div className='h-full '>
         <SpanModify key={1} translation='130%' text='UI/UX' />
       </div>
       <MotionLink href="/" className='w-16 h-16 bg-dark text-light flex items-center justify-center rounded-full text-2xl font-bold group cursor-pointer'
@@ -44,8 +44,9 @@ function SpanModify({ translation, text }: { translation?: string, text?: string
       pointer-events-none group-hover:pointer-events-auto
       absolute 
       translate-y-10
+      group-hover:h-14
       group-hover:translate-y-0
-      flex h-full items-center
+      flex items-center
       cursor-pointer
       hover:text-gray-300
       `}
