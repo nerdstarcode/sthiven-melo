@@ -32,7 +32,7 @@ import instagram from '@p/insta.svg'
 export default function NavBar() {
   const router = useRouter()
   return (
-    <header className='w-full px-16 md:px-32 py-8 font-medium flex items-center justify-between'>
+    <header className='w-full px-8 md:px-32 py-8 font-medium flex items-center justify-between'>
       <nav className='flex gap-4'>
         <CustomLink href={{ pathname: '/', query: { nome: 'Home', object: '', como: '', valor: '' } }} as="/" children='Home' router={router} />
         <CustomLink href={{ pathname: '/about', query: { nome: 'about' } }} as="/about" children='About' router={router} />

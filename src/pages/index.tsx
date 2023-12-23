@@ -99,7 +99,7 @@ export default function Home() {
             <h3 className='text-4xl'>
               Experience
             </h3>
-            <div className='animate-delay-1000 animate-jump-in grid grid-cols-2 md:grid-cols-3 gap-12 place-items-center'>
+            <div className='animate-delay-1000 animate-jump-in grid grid-cols-1 md:grid-cols-3 gap-12 place-items-center'>
               <div className='flex w-full items-center gap-4'>
                 <Image className='rounded-full w-20' alt='irineu' src={figma} priority />
                 <div className='flex flex-col gap-2'>
@@ -175,7 +175,7 @@ export default function Home() {
             <h3 className='text-4xl'>
               Experience
             </h3>
-            <div className='animate-delay-1000 animate-jump-in grid grid-cols-2 md:grid-cols-3 gap-12 place-items-center'>
+            <div className='animate-delay-1000 animate-jump-in grid grid-cols-1 md:grid-cols-3 gap-12 place-items-center'>
               <div className='flex w-full items-center gap-4'>
                 <Image className='w-20' alt='irineu' src={react} priority />
                 <div className='flex flex-col gap-2'>
@@ -257,7 +257,7 @@ export default function Home() {
             <header>
               <h2 className='text-4xl'>Stack</h2>
             </header>
-            <section id='stack-images' className='grid grid-cols-5 gap-4 place-items-center'>
+            <section id='stack-images' className='grid grid-cols-3 sm:grid-cols-5 gap-4 place-items-center'>
               <Image className='w-20' alt='irineu' src={azure} />
               <Image className='w-20' alt='irineu' src={nest} />
               <Image className='w-20' alt='irineu' src={postgreesql} />
@@ -267,7 +267,7 @@ export default function Home() {
               <Image className='w-20' alt='irineu' src={puppeteer} />
               <Image className='w-20' alt='irineu' src={python} />
               <Image className='w-20' alt='irineu' src={typeorm} />
-              <p>And more...</p>
+              <p className='col-span-3 sm:col-span-1'>And more...</p>
             </section>
           </article>
           <article className='animate-fade'>
@@ -298,10 +298,10 @@ export default function Home() {
                 </aside>
                 {/* <article id='article-about' className='w-1/2 flex flex-col items-center self-center'> */}
                 <header className='flex'>
-                  <AnimatedText Tag='h1' text={text[language]?.title} className='md:!text-6xl !text-2xl text-left' />
+                  <AnimatedText Tag='h1' text={text[language]?.title} className='md:!text-6xl sm:!text-2xl text-lg text-left' />
                 </header>
                 <main className='col-span-2 md:col-span-1'>
-                  <p className='my-4 text-base font-medium text-justify'>
+                  <p className='my-4 text-basefont-medium text-justify'>
                     {text[language]?.describe}
                   </p>
                 </main>

@@ -88,7 +88,7 @@ export default function About() {
         <Layout classname='pt-16'>
           <AnimatedText text={text[language]?.main} className='md:mb-16' />
           <section className='grid grid-cols-3 w-full md:max-h-screen md:grid-cols-8 gap-16'>
-            <article className='col-span-2 md:col-span-3 flex flex-col items-star justify-start '>
+            <article className='col-span-3 flex flex-col items-star justify-start '>
               <h2 className='mb-4 text-lg font-bold uppercase text-dark/75'>{text[language]?.biography}</h2>
               {
                 text[language]?.about.split("\n").map((paragraph, index) => {
@@ -99,7 +99,7 @@ export default function About() {
               }
 
             </article>
-            <aside className='md:col-span-3 relative h-full rounded-2xl border-2 border-solid border-dark bg-light dark:dark:bg-zinc-900 p-8'>
+            <aside className='hidden md:block col-span-3 relative h-full rounded-2xl border-2 border-solid border-dark bg-light dark:dark:bg-zinc-900 p-8'>
               <ImageTry />
               <div className='absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-3xl bg-dark' />
             </aside>
