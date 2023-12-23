@@ -103,24 +103,24 @@ export default function About() {
               <ImageTry />
               <div className='absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-3xl bg-dark' />
             </aside>
-            <div className='col-span-3 md:col-span-2 flex md:flex-col justify-between items-end'>
+            <div className='col-span-3 grid grid-cols-2 gap-8 place-items-center md:col-span-2 md:flex md:flex-col justify-between items-end'>
               <div className='flex flex-col items-end justify-center'>
-                <span className='inline-block text-3xl sm:text-6xl md:text-7xl font-bold'>
+                <span className='inline-block text-6xl md:text-7xl font-bold'>
                   <AnimatedNumbers value={50} />+
                 </span>
-                <h3 className='text-xs sm:text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.repos}</h3>
+                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.repos}</h3>
               </div>
               <div className='flex flex-col items-end justify-center'>
-                <span className='inline-block text-3xl sm:text-6xl md:text-7xl font-bold'>
+                <span className='inline-block text-6xl md:text-7xl font-bold'>
                   30+
                 </span>
-                <h3 className='text-xs sm:text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.curses}</h3>
+                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.curses}</h3>
               </div>
               <div className='flex flex-col items-end justify-center'>
-                <span className='inline-block text-3xl sm:text-6xl md:text-7xl font-bold'>
+                <span className='inline-block text-6xl md:text-7xl font-bold'>
                   1+
                 </span>
-                <h3 className='text-xs sm:text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.yearExperience}</h3>
+                <h3 className='text-sm font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.yearExperience}</h3>
               </div>
             </div>
           </section>

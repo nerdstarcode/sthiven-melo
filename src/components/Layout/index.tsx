@@ -4,7 +4,7 @@ export interface LayoutProps{
 }
 export default function Layout({children, classname}:LayoutProps) {
   return (
-    <div className={`w-full h-full inline-block z-0 dark:bg-zinc-900 p-16 md:p-32 ${classname}`}>
+    <div className={`w-full h-full inline-block z-0 dark:bg-zinc-900 p-8 md:p-32 ${classname}`}>
       {children}
     </div>
   )
