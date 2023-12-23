@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Component />
         <Footer />
         <div className='md:hidden sticky flex bottom-0 h-20 rounded-lg bg-black/50 backdrop-blur-md'>
-          <div className='m-auto w-3/4 !text-xs'>
+          <div className='m-auto w-8/12 !text-xs'>
             <Logo />
           </div>
         </div>
