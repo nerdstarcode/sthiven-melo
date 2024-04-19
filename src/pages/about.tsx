@@ -12,6 +12,7 @@ import ImageTry from '@/components/ImageTry';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
 import router from 'next/router';
+import Skills from '@/components/Skills';
 
 const AnimatedNumbers = ({ value }: any) => {
   const ref = useRef(null)
@@ -28,7 +29,7 @@ const AnimatedNumbers = ({ value }: any) => {
 
   if (typeof window !== 'undefined') {
     useLayoutEffect(() => {
-      router?.query?.nome !== 'about' ? router.push('/') : ''
+      // router?.query?.nome !== 'about' ? router.push('/') : ''
     }, [router?.query])
   }
   useEffect(() => {
@@ -85,8 +86,8 @@ export default function About() {
         <meta name='description' content='sobre minha trajetória no desnvolvimento'></meta>
       </Head>
       <main className='flex w-full flex-col items-center justify-center'>
-        <Layout classname='pt-16'>
-          <AnimatedText text={text[language]?.main} className='md:mb-16' />
+        <Layout classname='pt-16 gap-16'>
+          <AnimatedText text={text[language]?.main} />
           <section className='grid grid-cols-3 w-full md:max-h-screen md:grid-cols-8 gap-16'>
             <article className='col-span-3 flex flex-col items-star justify-start '>
               <h2 className='mb-4 text-lg font-bold uppercase text-dark/75'>{text[language]?.biography}</h2>
@@ -99,7 +100,7 @@ export default function About() {
               }
 
             </article>
-            <aside className='hidden md:block col-span-3 relative h-full rounded-2xl border-2 border-solid border-dark bg-light dark:dark:bg-zinc-900 p-8'>
+            <aside className='hidden md:block col-span-3 relative h-full rounded-2xl border-2 border-solid border-dark bg-zinc-900 p-8'>
               <ImageTry />
               <div className='absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-3xl bg-dark' />
             </aside>
@@ -108,25 +109,59 @@ export default function About() {
                 <span className='inline-block text-6xl md:text-7xl font-bold'>
                   <AnimatedNumbers value={50} />+
                 </span>
-                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.repos}</h3>
+                <h3 className='text-xl font-medium capitalize text-zinc-400/75'>{text[language]?.repos}</h3>
               </div>
               <div className='flex flex-col items-end justify-center'>
                 <span className='inline-block text-6xl md:text-7xl font-bold'>
                   30+
                 </span>
-                <h3 className='text-xl font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.curses}</h3>
+                <h3 className='text-xl font-medium capitalize text-zinc-400/75'>{text[language]?.curses}</h3>
               </div>
               <div className='flex flex-col items-end justify-center'>
                 <span className='inline-block text-6xl md:text-7xl font-bold'>
                   1+
                 </span>
-                <h3 className='text-sm font-medium capitalize text-dark/75 dark:text-zinc-400/75'>{text[language]?.yearExperience}</h3>
+                <h3 className='text-sm font-medium capitalize text-zinc-400/75'>{text[language]?.yearExperience}</h3>
               </div>
             </div>
           </section>
+          <SkiilsSection>
+
+          </SkiilsSection>
         </Layout>
 
       </main>
     </div>
+  )
+}
+
+function SkiilsSection() {
+  return (
+    <section id={'skills'}>
+      <h3 className='font-bold text-8xl w-full text-center'>Skills</h3>
+      <div className='w-full h-screen relative flex items-center justify-center rounded-full bg-circularDark'>
+        <Skills text='Figma' x='0' y='-15vw' />
+        <Skills text='React Native' x='25vw' y='5vw' />
+        <Skills text='Kubernetes' x='30vw' y='-6vw' />
+        <Skills text='RabbitMQ' x='-30vw' y='6vw' />
+        <Skills text='Java' x='-25vw' y='-5vw' />
+        <Skills text='Sql' x='-25vw' y='15vw' />
+        <Skills text='MongoDB' x='-30vw' y='-15vw' />
+
+        <Skills text='Cisco' x='-15vw' y='-15vw' />
+        <Skills text='Service Now' x='26vw' y='15vw' />
+        <Skills text='Redis' x='-15vw' y='10vw' />
+        <Skills text='Tailwind' x='12vw' y='-8vw' />
+        <Skills text='Scss' x='-8vw' y='20vw' />
+        <Skills text='Angular' x='15vw' y='-18vw' />
+        <Skills text='Vue' x='15vw' y='18vw' />
+
+        <Skills text='NestJS' x='0' y='0' />
+
+        <Skills text='React' x='10vw' y='5vw' />
+        <Skills text='React' x='-10vw' y='-5vw' />
+        <Skills text='Next' x='5vw' y='15vw' />
+      </div>
+    </section>
   )
 }

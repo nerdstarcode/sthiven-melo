@@ -39,7 +39,7 @@ export default function AnimatedText({ text, className = '', Tag = 'h2' }: Anima
   
   return (
     <div className={`w-full mx-auto py-2 flex items-center justify-center text-center overflow-hidden`}>
-      <MotionText variants={quote} initial='initial' animate='animate' className={`inline-block w-full text-dark dark:text-zinc-200 font-bold capitalize text-4xl md:text-4xl xl:text-8xl ${className}`}>
+      <MotionText variants={quote} initial='initial' animate='animate' className={`inline-block w-full text-zinc-200 font-bold capitalize text-4xl md:text-4xl xl:text-8xl ${className}`}>
         {
           text?.split(' ').map((word: string, index: number): any => {
             return (
