@@ -125,9 +125,7 @@ export default function About() {
               </div>
             </div>
           </section>
-          <SkiilsSection>
-
-          </SkiilsSection>
+          <SkiilsSection />
         </Layout>
 
       </main>
