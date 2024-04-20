@@ -1,18 +1,19 @@
 import AnimatedText from '@/components/AnimatedText';
 import Layout from '@/components/Layout';
 import Head from 'next/head';
-
-import Image from 'next/image'
-import aboutpicturelight from '@p/aboutpicturelight.jpg'
+import nttDataImage from '@p/backend.svg'
+import volunteer from '@p/experience/Volunteering-bro.svg'
+import develop from '@p/experience/developer-activity-animate.svg'
+import freela from '@p/experience/freelancer-animate.svg'
 import aboutpicture from '@p/aboutpicture.jpg'
-import aboutpicturehover from '@p/aboutpicturehover.jpg'
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ImageTry from '@/components/ImageTry';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { useMotionValue, useSpring } from 'framer-motion';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
 import router from 'next/router';
 import Skills from '@/components/Skills';
+import Details from '@/components/Details';
 
 const AnimatedNumbers = ({ value }: any) => {
   const ref = useRef(null)
@@ -126,6 +127,7 @@ export default function About() {
             </div>
           </section>
           <SkiilsSection />
+          <ExperienceSection />
         </Layout>
 
       </main>
@@ -136,7 +138,7 @@ export default function About() {
 function SkiilsSection() {
   return (
     <section id={'skills'}>
-      <h3 className='font-bold text-8xl w-full text-center'>Skills</h3>
+      <h2 className='font-bold text-8xl w-full text-center'>Skills</h2>
       <div className='w-full h-screen relative flex items-center justify-center rounded-full bg-circularDark'>
         <Skills text='Figma' x='0' y='-15vw' />
         <Skills text='React Native' x='25vw' y='5vw' />
@@ -159,6 +161,111 @@ function SkiilsSection() {
         <Skills text='React' x='10vw' y='5vw' />
         <Skills text='React' x='-10vw' y='-5vw' />
         <Skills text='Next' x='5vw' y='15vw' />
+      </div>
+    </section>
+  )
+}
+
+function ExperienceSection() {
+  return (
+    <section className='flex flex-col gap-16'>
+      <h2 className='font-bold text-4xl sm:text-8xl w-full text-center'>Experience</h2>
+      <div className='w-full mx-auto relative'>
+        <ul className='flex flex-col gap-4 w-full items-center justify-center'>
+          <Details.Main classname='flex items-center gap-8'>
+            <Details.AsideImage classname='opacity-70' src={nttDataImage} alt='ntt programmer' />
+            <Details.Article classname='w-11/12'>
+              <Details.Title
+                classname='capitalize'
+                companyLink='https://www.linkedin.com/company/ntt-data-inc/mycompany/'
+                company='NTT DATA, Inc'
+                position='Intern Software Engineer'
+              />
+              <Details.SpaceAndTime
+                classname='capitalize opacity-75'
+                address='Brasil'
+                time='2022/11 - Atual'
+              />
+              <Details.Description
+                classname='font-medium w-full'
+                work='Diariamente trabalho como desenvolvedor fullstack criando aplicações internas ou para nossos clientes utilizando React ou Angular para frontend e Nestjs no front, frequente contatocom arquitetura na Azure e kubernetes.'
+              />
+            </Details.Article>
+          </Details.Main>
+
+
+          <Details.Main classname='flex items-center gap-8'>
+            <Details.Article classname='w-11/12'>
+              <Details.Title
+                classname='capitalize'
+                companyLink='https://www.linkedin.com/company/faex-conseil-juridique/'
+                company='Faex'
+                position='Freelancer'
+              />
+              <Details.SpaceAndTime
+                classname='capitalize opacity-75'
+                address='Brasil'
+                time='2024/01 - Atual'
+              />
+              <Details.Description
+                classname='font-medium w-full'
+                work={`
+                  Desenvolvimento de integração do ORM Angedor com Whatsapp para agilizar os processos de novos clientes tal qual para melhorar o atendimento com antigos com fluxos personalizados para cada um.
+                  Além de criação de bots para automatizar a captura de dados e melhorar a qualidade de vida dos trabalhadores.
+                `}
+              />
+            </Details.Article>
+            <Details.AsideImage classname='opacity-70' src={develop} alt='ntt programmer' />
+          </Details.Main>
+
+          <Details.Main classname='flex items-center gap-8'>
+            <Details.AsideImage classname='opacity-70' src={freela} alt='ntt programmer' />
+            <Details.Article classname='w-11/12'>
+              <Details.Title
+                classname='capitalize'
+                companyLink='https://www.linkedin.com/company/modal---modalnetworks-servi-os-em-inform-tica/about/'
+                company='Modalnetworks | ModalEduca'
+                position='Software Engineer'
+              />
+              <Details.SpaceAndTime
+                classname='capitalize opacity-75'
+                address='Brasil'
+                time='2022/09 - 2023/03'
+              />
+              <Details.Description
+                classname='font-medium w-full'
+                work={`
+                  Trabalhos diários desenvolvendo RPAs com puppeteer e criação de interface utilizando de blockly para ajudar no ensino de programação para estudantes do fundamental.
+                  Além de orientar um segundo estagiário a realizar os RPAs. Houveram também refatorações de códigos legado com php para a nova plataforma com React.
+                `}
+              />
+            </Details.Article>
+          </Details.Main>
+
+
+          <Details.Main classname='flex items-center gap-8'>
+            <Details.Article classname='w-11/12'>
+              <Details.Title
+                classname='capitalize'
+                // companyLink='https://www.linkedin.com/company/ntt-data-inc/mycompany/'
+                // company='NTT DATA, Inc'
+                position='Voluntário'
+              />
+              <Details.SpaceAndTime
+                classname='capitalize opacity-75'
+                address='Brasil'
+                time=''
+              />
+              <Details.Description
+                classname='font-medium w-full'
+                work={`
+                  Participo de trabalhos voluntários para aprimorar minha experiência, já trabalhei para empresas de educação e para mini empresa da faculdade UFRRJ. Normalmente atuo em áreas que precisam de algum auxílio, sendo back, front ou até mesmo com design para criação de logos ou na parte de UI/UX
+                `}
+              />
+            </Details.Article>
+            <Details.AsideImage classname='opacity-70' src={volunteer} alt='ntt programmer' />
+          </Details.Main>
+        </ul>
       </div>
     </section>
   )

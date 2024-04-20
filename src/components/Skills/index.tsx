@@ -11,7 +11,6 @@ export default function Skills({ text = 'Web', x = '0vw', y = '0vh' }: AnimatedT
 
   return (
     <motion.div
-      key={150}
       className={`
         flex
         items-center
@@ -20,10 +19,13 @@ export default function Skills({ text = 'Web', x = '0vw', y = '0vh' }: AnimatedT
         dont-semibold
         bg-dark
         text-light
-        p-8
         shadow-[0px_0px_28px_0px_rgba(126,_34,_206,_.5)] 
         cursor-pointer
         absolute
+        text-[.5rem]
+        p-3
+        sm:text-sm
+        sm:p-8
       `}
       initial={{ x: 0, y: 0, scale: 0, }}
       whileInView={{ x, y, scale: 1, }}
