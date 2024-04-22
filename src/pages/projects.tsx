@@ -28,11 +28,10 @@ export default function Projects() {
       <main className='flex w-full flex-col items-center justify-center'>
         <Layout classname='pt-16 gap-16'>
           <AnimatedText text='A imaginação aprimora o esforço' className='' />
-          <section className='grid grid-cols-12 gap-24'>
+          <section className='grid grid-cols-12 gap-8 sm:gap-24'>
             {/* <h3 className='col-span-12'>Projetos desenvolvidos</h3> */}
             <ProjectCardTemplate
               title='Nlw Space Time'
-              className=''
               github='https://github.com/nerdstarcode/NLW_SpaceTime'
               link='https://github.com/nerdstarcode/NLW_SpaceTime'
               src={nlwSpaceTime}
@@ -41,7 +40,6 @@ export default function Projects() {
 
             <ProjectCodedOnly
               title='NLW Unite'
-              className=''
               github='https://github.com/nerdstarcode/node-nlw-unite'
               src={nlwUnite}
               type='Backend' />
@@ -49,14 +47,12 @@ export default function Projects() {
 
             <ProjectCodedOnly
               title='Ignite Lab Nodejs'
-              className=''
               github='https://github.com/nerdstarcode/ignite-lab-nodejs'
               src={igniteLabNodejs}
               type='Backend' />
 
             <ProjectCardTemplate
               title='NLW Esports'
-              className=''
               github='https://github.com/nerdstarcode/nlw-esports'
               link='https://github.com/nerdstarcode/nlw-esports'
               src={nlwESports}
@@ -65,44 +61,37 @@ export default function Projects() {
 
             <ProjectCodedOnly
               title='Ignite Lab Storybook'
-              className=''
               github='https://github.com/nerdstarcode/IgniteLabStorybook'
               src={igniteLabStorybook}
               type='Frontend' />
 
             <ProjectCodedOnly
               title='NLP Redis'
-              className=''
               github='https://github.com/nerdstarcode/NLP'
               src={nplRedis}
               type='Backend' />
             <ProjectCodedOnly
               title='Spotify Web'
-              className=''
               github='https://github.com/nerdstarcode/spotify-music-info'
               src={spotify}
               type='Frontend' />
             <ProjectCodedOnly
               title='Spotify Server'
-              className=''
               github='https://github.com/nerdstarcode/spotify-music-info-server'
               src={spotify}
               type='Backend' />
             <ProjectCodedOnly
               title='Clone Instagram'
-              className=''
               github='https://github.com/nerdstarcode/Clone-Instagram'
               src={cloneInstagram}
               type='FrontEnd' />
             <ProjectCodedOnly
               title='Login Gitlab Rebrading'
-              className=''
               github='https://github.com/nerdstarcode/LoginBootstrap'
               src={loginBootstrap}
               type='FrontEnd' />
             <ProjectCodedOnly
               title='Arduino - Básico'
-              className=''
               github='https://github.com/nerdstarcode/ProgramasBasicosArduino'
               src={arduino}
               type='Others' />

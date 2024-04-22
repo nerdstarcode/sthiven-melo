@@ -45,7 +45,7 @@ export function Tumble({ title, className, link = '#', src }: Pick<ProjectCardDT
 
 export function Aside({ children, className }: Pick<ProjectCardDTO, 'children' | 'className'>) {
   return (
-    <div className={twMerge('flex flex-col w-full h-full py-2 pr-2 ', className)}>
+    <div className={twMerge('flex flex-col w-full h-full sm:py-2 sm:pr-2 ', className)}>
       {children}
     </div>
   )
