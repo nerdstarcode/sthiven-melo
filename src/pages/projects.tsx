@@ -28,7 +28,7 @@ export default function Projects() {
       <main className='flex w-full flex-col items-center justify-center'>
         <Layout classname='pt-16 gap-16'>
           <AnimatedText text='A imaginação aprimora o esforço' className='' />
-          <section className='grid grid-cols-12 gap-8 sm:gap-24'>
+          <section className='grid grid-cols-12 gap-4 sm:gap-8 '>
             {/* <h3 className='col-span-12'>Projetos desenvolvidos</h3> */}
             <ProjectCardTemplate
               title='Nlw Space Time'

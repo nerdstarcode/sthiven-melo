@@ -38,7 +38,7 @@ export function Main({ children, className }: Pick<ProjectCardDTO, 'children' | 
 export function Tumble({ title, className, link = '#', src }: Pick<ProjectCardDTO, 'title' | 'className' | 'link' | 'src'>) {
   return (
     <Link href={link} className={twMerge('cursor-pointer overflow-hidden rounded-s-lg' , className)} target='_blank'>
-      <Image src={src} alt={title} className='w-full h-auto' />
+      <Image src={src} alt={title} className='w-full h-auto object-con' />
     </Link>
   )
 }
@@ -53,7 +53,7 @@ export function Aside({ children, className }: Pick<ProjectCardDTO, 'children' |
 
 export function Header({ children, className }: Pick<ProjectCardDTO, 'children' | 'className'>) {
   return (
-    <div className={twMerge('flex flex-col items-start justify-between gap-4', className)}>
+    <div className={twMerge('flex flex-col items-start justify-between gap-1 sm:gap-4', className)}>
       {children}
     </div>
   )
@@ -61,14 +61,14 @@ export function Header({ children, className }: Pick<ProjectCardDTO, 'children' 
 
 export function Type({ type, className }: Pick<ProjectCardDTO, 'type' | 'className'>) {
   return (
-    <span className={twMerge('text-primary font-medium text-xl', className)}>{type}</span>
+    <span className={twMerge('text-primary font-medium text-sm sm:text-xl', className)}>{type}</span>
   )
 }
 
 export function Title({ title, className, link = '#', }: Pick<ProjectCardDTO, 'title' | 'className' | 'link'>) {
   return (
     <Link className="hover:underline underline-offset-2" href={link} target='_blank'>
-      <h4 className={twMerge('text-4xl font-bold', className)}>{title}</h4>
+      <h4 className={twMerge('text-xl sm:text-4xl font-bold', className)}>{title}</h4>
     </Link>
   )
 }
@@ -79,11 +79,11 @@ export function Summary({ summary, className }: Pick<ProjectCardDTO, 'summary' |
 }
 export function Links({ github, className, link = '#', }: Pick<ProjectCardDTO, 'github' | 'className' | 'link'>) {
   return (
-    <div className={twMerge("flex items-center gap-4", className)}>
-      <Link className="w-10" href={github} target='_blank'>
+    <div className={twMerge("flex items-center gap-2 sm:gap-4", className)}>
+      <Link className="w-6 sm:w-10" href={github} target='_blank'>
         <GithubIcon />
       </Link>
-      <Link href={link} target='_blank'>
+      <Link className="text-sm sm:text-base" href={link} target='_blank'>
         View Project
       </Link>
     </div>

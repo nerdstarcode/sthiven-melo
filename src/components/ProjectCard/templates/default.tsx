@@ -4,7 +4,7 @@ export default function ProjectCardTemplate({ title, className, link = '#', src,
     return (
         <ProjectCard.Main className="col-span-12 md:col-span-12 4xl:col-span-12 flex-col px-0 overflow-hidden gap-1 sm:flex-row">
             <ProjectCard.Tumble src={src} link={link} title={title} className="w-full sm:w-1/2 h-full" />
-            <ProjectCard.Aside className="w-full sm:w-1/2 flex flex-col items-start justify-between px-4 pb-4">
+            <ProjectCard.Aside className="w-full sm:w-1/2 flex flex-col items-start justify-between px-2 sm:px-4 pb-2 sm:pb-4">
                 <ProjectCard.Header>
                     <ProjectCard.Type type={type} />
                     <ProjectCard.Title link={link} title={title} className="" />
