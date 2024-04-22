@@ -1,13 +1,14 @@
 import * as React from "react";
+import { twMerge } from "tailwind-merge";
 
-export const GithubIcon = ({ className, ...rest }:any) => (
+export const GithubIcon = ({ className, ...rest }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
     height="1em"
     viewBox="0 0 512 512"
     {...rest}
-    className={`w-full h-auto ${className}`}
+    className={twMerge(`w-full h-auto`, className)}
   >
     <path fill="none" d="M0 0h512v512H0z" />
     <path
@@ -17,7 +18,7 @@ export const GithubIcon = ({ className, ...rest }:any) => (
   </svg>
 );
 
-export const LinkedInIcon = ({ className, ...rest }:any) => (
+export const LinkedInIcon = ({ className, ...rest }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -38,7 +39,7 @@ export const LinkedInIcon = ({ className, ...rest }:any) => (
   </svg>
 );
 
-export const PinterestIcon = ({ className, ...rest }:any) => (
+export const PinterestIcon = ({ className, ...rest }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -55,7 +56,7 @@ export const PinterestIcon = ({ className, ...rest }:any) => (
   </svg>
 );
 
-export const DribbbleIcon = ({ className, ...rest }:any) => (
+export const DribbbleIcon = ({ className, ...rest }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -76,7 +77,7 @@ export const DribbbleIcon = ({ className, ...rest }:any) => (
   </svg>
 );
 
-export const SunIcon = ({ className, ...rest }:any) => (
+export const SunIcon = ({ className, ...rest }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -254,7 +255,7 @@ export const SunIcon = ({ className, ...rest }:any) => (
   </svg>
 );
 
-export const MoonIcon = ({ className, ...rest }:any) => (
+export const MoonIcon = ({ className, ...rest }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -410,7 +411,7 @@ export const MoonIcon = ({ className, ...rest }:any) => (
   </svg>
 );
 
-export const CircularText = ({ className, ...rest }:any) => (
+export const CircularText = ({ className, ...rest }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="496"
@@ -424,7 +425,7 @@ export const CircularText = ({ className, ...rest }:any) => (
   </svg>
 );
 
-export const LinkArrow = ({ className, ...rest }:any) => (
+export const LinkArrow = ({ className, ...rest }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={24}
