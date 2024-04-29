@@ -188,7 +188,7 @@ function ExperienceSection() {
               />
               <Details.Description
                 classname='font-medium w-full'
-                work='Diariamente trabalho como desenvolvedor fullstack criando aplicações internas ou para nossos clientes utilizando React ou Angular para frontend e Nestjs no front, frequente contatocom arquitetura na Azure e kubernetes.'
+                work='Diariamente trabalho como desenvolvedor fullstack criando aplicações internas ou para nossos clientes utilizando React ou Angular para frontend e Nestjs no backend, frequente contatocom arquitetura na Azure e kubernetes.'
               />
             </Details.Article>
           </Details.Main>

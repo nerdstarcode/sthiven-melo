@@ -12,6 +12,7 @@ export interface ProjectCardDTO {
   children?: any;
   type: string;
   summary: string;
+  imageClassName?: string;
 }
 
 export function Main({ children, className }: Pick<ProjectCardDTO, 'children' | 'className'>) {
@@ -35,10 +36,10 @@ export function Main({ children, className }: Pick<ProjectCardDTO, 'children' | 
   )
 }
 
-export function Tumble({ title, className, link = '#', src }: Pick<ProjectCardDTO, 'title' | 'className' | 'link' | 'src'>) {
+export function Tumble({ title, className, link = '#', src, imageClassName }: Pick<ProjectCardDTO, 'title' | 'className' | 'link' | 'src' | 'imageClassName'>) {
   return (
-    <Link href={link} className={twMerge('cursor-pointer overflow-hidden rounded-s-lg' , className)} target='_blank'>
-      <Image src={src} alt={title} className='w-full h-auto object-con' />
+    <Link href={link} className={twMerge('cursor-pointer overflow-hidden rounded-s-lg', className)} target='_blank'>
+      <Image src={src} alt={title} className={`w-full 4xl:h-full 4xl:w-auto 4xl:object-cover h-auto ${imageClassName}`} />
     </Link>
   )
 }

@@ -8,7 +8,7 @@ const nextConfig = {
         destination: '/:path*'
       },
       {
-        source: '/projects',
+        source: '/github',
         destination: 'https://github.com/nerdstarcode?tab=repositories'
       },
       {

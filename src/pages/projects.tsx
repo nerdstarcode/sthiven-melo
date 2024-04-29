@@ -35,6 +35,7 @@ export default function Projects() {
               github='https://github.com/nerdstarcode/NLW_SpaceTime'
               link='https://github.com/nerdstarcode/NLW_SpaceTime'
               src={nlwSpaceTime}
+              imageClassName='4xl:object-left'
               summary={`Construido um projeto fullstack em Nextjs, Express e React Native. O Projeto é como um diário onde o usuário se cadastra e adiciona fotos e uma história para sua memória que ficam armazenadas de forma que cria uma timeline de acontecimentos`}
               type='FullStack' />
 
@@ -56,6 +57,8 @@ export default function Projects() {
               github='https://github.com/nerdstarcode/nlw-esports'
               link='https://github.com/nerdstarcode/nlw-esports'
               src={nlwESports}
+              imageClassName='4xl:object-center'
+
               summary={`Construido um projeto fullstack em Nextjs, Express e React Native. O Projeto tem o objetivo de criar posts para juntar pessoas para jogarem determinados jogos. Há todo o processo de criação de anuncios utilizando a api da twitch para pegar imagens atualizadas dos jogos em questão.`}
               type='FullStack' />
 
