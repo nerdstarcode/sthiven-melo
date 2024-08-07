@@ -6,6 +6,7 @@ import ProjectCodedOnly from '@/components/ProjectCard/templates/codedOnly';
 
 //projects
 import nlwSpaceTime from '@p/projects/nlw-space-time.png'
+import cartaoSaude from '@p/projects/cartao-saude.png'
 import nlwUnite from '@p/projects/nlw-unite.png'
 import nlwESports from '@p/projects/nlw-esports.png'
 import igniteLabStorybook from '@p/projects/ignitelab-storybook.png'
@@ -30,15 +31,14 @@ export default function Projects() {
           <AnimatedText text='A imaginação aprimora o esforço' className='' />
           <section className='grid grid-cols-12 gap-4 sm:gap-8 '>
             {/* <h3 className='col-span-12'>Projetos desenvolvidos</h3> */}
-            <ProjectCardTemplate
-              title='Nlw Space Time'
-              github='https://github.com/nerdstarcode/NLW_SpaceTime'
-              link='https://github.com/nerdstarcode/NLW_SpaceTime'
-              src={nlwSpaceTime}
-              imageClassName='4xl:object-left'
-              summary={`Construido um projeto fullstack em Nextjs, Express e React Native. O Projeto é como um diário onde o usuário se cadastra e adiciona fotos e uma história para sua memória que ficam armazenadas de forma que cria uma timeline de acontecimentos`}
-              type='FullStack' />
 
+            <ProjectCardTemplate
+              title='Cartão Saúde mais'
+              link='https://sejasaudemais.com.br/'
+              src={cartaoSaude}
+              imageClassName='object-center'
+              summary={`Experiencia profissional como dev pleno para desenvolvimento de site de plano de saúde cartão saúde + em nextjs usando uma api Graphql enquanto orientava um júnior no desenvolvimento`}
+              type='Frontend' />
             <ProjectCodedOnly
               title='NLW Unite'
               github='https://github.com/nerdstarcode/node-nlw-unite'
@@ -52,16 +52,6 @@ export default function Projects() {
               src={igniteLabNodejs}
               type='Backend' />
 
-            <ProjectCardTemplate
-              title='NLW Esports'
-              github='https://github.com/nerdstarcode/nlw-esports'
-              link='https://github.com/nerdstarcode/nlw-esports'
-              src={nlwESports}
-              imageClassName='4xl:object-center'
-
-              summary={`Construido um projeto fullstack em Nextjs, Express e React Native. O Projeto tem o objetivo de criar posts para juntar pessoas para jogarem determinados jogos. Há todo o processo de criação de anuncios utilizando a api da twitch para pegar imagens atualizadas dos jogos em questão.`}
-              type='FullStack' />
-
             <ProjectCodedOnly
               title='Ignite Lab Storybook'
               github='https://github.com/nerdstarcode/IgniteLabStorybook'
@@ -73,6 +63,14 @@ export default function Projects() {
               github='https://github.com/nerdstarcode/NLP'
               src={nplRedis}
               type='Backend' />
+            <ProjectCardTemplate
+              title='Nlw Space Time'
+              github='https://github.com/nerdstarcode/NLW_SpaceTime'
+              link='https://github.com/nerdstarcode/NLW_SpaceTime'
+              src={nlwSpaceTime}
+              imageClassName='4xl:object-left'
+              summary={`Construido um projeto fullstack em Nextjs, Express e React Native. O Projeto é como um diário onde o usuário se cadastra e adiciona fotos e uma história para sua memória que ficam armazenadas de forma que cria uma timeline de acontecimentos`}
+              type='FullStack' />
             <ProjectCodedOnly
               title='Spotify Web'
               github='https://github.com/nerdstarcode/spotify-music-info'
@@ -83,6 +81,15 @@ export default function Projects() {
               github='https://github.com/nerdstarcode/spotify-music-info-server'
               src={spotify}
               type='Backend' />
+            <ProjectCardTemplate
+              title='NLW Esports'
+              github='https://github.com/nerdstarcode/nlw-esports'
+              link='https://github.com/nerdstarcode/nlw-esports'
+              src={nlwESports}
+              imageClassName='4xl:object-center'
+
+              summary={`Construido um projeto fullstack em Nextjs, Express e React Native. O Projeto tem o objetivo de criar posts para juntar pessoas para jogarem determinados jogos. Há todo o processo de criação de anuncios utilizando a api da twitch para pegar imagens atualizadas dos jogos em questão.`}
+              type='FullStack' />
             <ProjectCodedOnly
               title='Clone Instagram'
               github='https://github.com/nerdstarcode/Clone-Instagram'

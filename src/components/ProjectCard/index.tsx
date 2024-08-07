@@ -7,7 +7,7 @@ export interface ProjectCardDTO {
   title: string;
   className?: string;
   link: string;
-  github: string;
+  github?: string;
   src: any;
   children?: any;
   type: string;
@@ -81,9 +81,11 @@ export function Summary({ summary, className }: Pick<ProjectCardDTO, 'summary' |
 export function Links({ github, className, link = '#', }: Pick<ProjectCardDTO, 'github' | 'className' | 'link'>) {
   return (
     <div className={twMerge("flex items-center gap-2 sm:gap-4", className)}>
-      <Link className="w-6 sm:w-10" href={github} target='_blank'>
-        <GithubIcon />
-      </Link>
+      {github !== undefined &&
+        <Link className="w-6 sm:w-10" href={github} target='_blank'>
+          <GithubIcon />
+        </Link>
+      }
       <Link className="text-sm sm:text-base" href={link} target='_blank'>
         View Project
       </Link>

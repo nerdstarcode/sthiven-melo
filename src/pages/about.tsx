@@ -158,7 +158,6 @@ function SkiilsSection() {
 
         <Skills text='NestJS' x='0' y='0' />
 
-        <Skills text='React' x='10vw' y='5vw' />
         <Skills text='React' x='-10vw' y='-5vw' />
         <Skills text='Next' x='5vw' y='15vw' />
       </div>
