@@ -44,22 +44,22 @@
   top: 40%;
   left: 50%;
   transform-origin: bottom center;
-  transform: translate(-50%, -50%) rotate(calc(20deg*-1));
+  transform: translate(-50%, -50%) rotate(20deg);
   border-radius: 50%;
-  width: calc(200px/2);
+  width: 100px;
   height: 80px;
   background: rgba(255, 255, 255, 0.05);
 }
 
 .liquid {
   position: absolute;
-  inset: calc(200px/2) 10px 10px 10px;
+  inset: 100px 10px 10px 10px;
   background: #41c1fb;
-  border-bottom-left-radius: calc(200px/2);
-  border-bottom-right-radius: calc(200px/2);
+  border-bottom-left-radius: 100px;
+  border-bottom-right-radius: 100px;
   filter: drop-shadow(0 0 80px #41c1fb);
   transform-origin: top center;
-  transform: rotate(calc(20deg*-1))
+  transform: rotate(-20deg)
 }
 
 ;
