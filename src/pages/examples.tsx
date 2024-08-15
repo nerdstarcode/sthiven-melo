@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <>
       <main className='flex justify-center items-center text-dark dark:text-zinc-400 w-full min-h-screen'>
-        <Layout classname='pt-0 flex flex-col gap-8 max-w-7xl'>
+        <Layout classname='pt-0 flex flex-col gap-32 max-w-7xl'>
           <SectionComponents
             id='recipe_component'
           >

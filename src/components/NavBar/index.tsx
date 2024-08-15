@@ -37,6 +37,7 @@ export default function NavBar() {
         <CustomLink href={{ pathname: '/', query: { nome: 'Home', object: '', como: '', valor: '' } }} as="/" children='Home' router={router} />
         <CustomLink href={{ pathname: '/about', query: { nome: 'about' } }} as="/about" children='About' router={router} />
         <CustomLink href='/projects' children='Projects' router={router} />
+        <CustomLink href='/examples' children='Examples' router={router} />
         {/* <CustomLink href='/articles' children='Articles' router={router} /> */}
       </nav>
       <nav className='flex items-center justify-center flex-wrap gap-4 '>
