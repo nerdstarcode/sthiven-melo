@@ -17,14 +17,15 @@ export default function Home() {
       <main className='flex justify-center items-center text-dark dark:text-zinc-400 w-full min-h-screen'>
         <Layout classname='pt-0 flex flex-col gap-32 max-w-7xl'>
           <SectionComponents
+          key="cubo-content"
             id='recipe_component'
           >
             <AsideComponent
-              title='Recipe glowing component'
-              description='Componente criado com Sass'
+              title='Cube 3D Rotation'
+              description='Componente criado com ThreeJS'
               className='group-hover:text-blue-500'
             />
-            <Recipe />
+            <ThreeScene/>
           </SectionComponents>
           <SectionComponents
             id='glowing_cube'
@@ -53,6 +54,7 @@ function SectionComponents({ id, children }: any) {
   )
 }
 import { twMerge } from 'tailwind-merge'
+import ThreeScene from '@/components/ThreeJS/ThreeScene'
 function AsideComponent({ title, description, className }: any) {
   return (
     <aside>
