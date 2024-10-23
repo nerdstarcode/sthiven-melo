@@ -28,20 +28,23 @@ const CustomLink = ({ href, as, classname = '', target, router, children }: Cust
   )
 }
 import instagram from '@p/insta.svg'
-
+import autsm from '@p/autsm.svg'
 export default function NavBar() {
   const router = useRouter()
   return (
     <header className='w-full px-8 md:px-32 py-8 font-medium flex items-center justify-between'>
-      <nav className='flex gap-4'>
-        <CustomLink href={{ pathname: '/', query: { nome: 'Home', object: '', como: '', valor: '' } }} as="/" children='Home' router={router} />
-        <CustomLink href={{ pathname: '/about', query: { nome: 'about' } }} as="/about" children='About' router={router} />
-        <CustomLink href='/projects' children='Projects' router={router} />
-        <CustomLink href='/examples' children='Examples' router={router} />
-        {/* <CustomLink href='/articles' children='Articles' router={router} /> */}
-      </nav>
+      <div className='flex items-center w-fit'>
+        <Image className='h-20 w-20' src={autsm} alt='autism-tdah' />
+        <nav className='flex gap-4 h-fit'>
+          <CustomLink href={{ pathname: '/', query: { nome: 'Home', object: '', como: '', valor: '' } }} as="/" children='Home' router={router} />
+          <CustomLink href={{ pathname: '/about', query: { nome: 'about' } }} as="/about" children='About' router={router} />
+          <CustomLink href='/projects' children='Projects' router={router} />
+          <CustomLink href='/examples' children='Examples' router={router} />
+          {/* <CustomLink href='/articles' children='Articles' router={router} /> */}
+        </nav>
+      </div>
       <nav className='flex items-center justify-center flex-wrap gap-4 '>
-        <motion.a href='https://www.instagram.com/nerd_star_code/' children={<Image src={instagram} alt='insta'/>} target='_blank' whileHover={{ y: -2 }} className='w-6' whileTap={{ scale: 0.9 }} />
+        <motion.a href='https://www.instagram.com/nerd_star_code/' children={<Image src={instagram} alt='insta' />} target='_blank' whileHover={{ y: -2 }} className='w-6' whileTap={{ scale: 0.9 }} />
         {/* <motion.a href='/' children={<DribbbleIcon />} target='_blank' whileHover={{ y: -2 }} className='w-6' whileTap={{ scale: 0.9 }} /> */}
         <motion.a href='https://github.com/nerdstarcode' children={<GithubIcon />} target='_blank' whileHover={{ y: -2 }} className='w-6' whileTap={{ scale: 0.9 }} />
         <motion.a href='https://www.linkedin.com/in/sthiven-melo-a67a1722b/' children={<LinkedInIcon />} target='_blank' whileHover={{ y: -2 }} className='w-6' whileTap={{ scale: 0.9 }} />
