@@ -3,38 +3,58 @@ import Layout from '@/components/Layout'
 import Head from 'next/head'
 import Image from 'next/image'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { Recipe } from '@/components/GlowingRecipe'
 import { GlowingCube } from '@/components/GlowingCube'
+import { useLanguageContext } from '@/contexts/LanguageContext'
 
+const examplesText = {
+  pt: {
+    cubeTitle: 'Cube 3D Rotation',
+    cubeDescription: 'Componente criado com ThreeJS',
+    glowingTitle: 'Glowing Cube component',
+    glowingDescription: 'Componente criado com Tailwind CSS',
+  },
+  en: {
+    cubeTitle: 'Cube 3D Rotation',
+    cubeDescription: 'Component built with ThreeJS',
+    glowingTitle: 'Glowing Cube component',
+    glowingDescription: 'Component built with Tailwind CSS',
+  },
+  es: {
+    cubeTitle: 'Rotación de Cubo 3D',
+    cubeDescription: 'Componente creado con ThreeJS',
+    glowingTitle: 'Componente Cubo Brillante',
+    glowingDescription: 'Componente creado con Tailwind CSS',
+  },
+}
 
-export default function Home() {
-  const [language, setLanguage] = useState<'pt' | 'es' | 'en'>('pt');
-  const [work, setWork] = useState<string | null>()
+export default function ExamplesPage() {
+  const { language } = useLanguageContext()
+
   return (
     <>
       <main className='flex justify-center items-center text-dark dark:text-zinc-400 w-full min-h-screen'>
         <Layout classname='pt-0 flex flex-col gap-32 max-w-7xl'>
           <SectionComponents
-          key="cubo-content"
+            key="cubo-content"
             id='recipe_component'
           >
             <AsideComponent
-              title='Cube 3D Rotation'
-              description='Componente criado com ThreeJS'
+              title={examplesText[language].cubeTitle}
+              description={examplesText[language].cubeDescription}
               className='group-hover:text-blue-500'
             />
-            <ThreeScene/>
+            <ThreeScene />
           </SectionComponents>
           <SectionComponents
             id='glowing_cube'
-
           >
             <GlowingCube />
             <AsideComponent
-              title='Glowing Cube component'
-              description='Componente criado com Tailwind CSS'
+              title={examplesText[language].glowingTitle}
+              description={examplesText[language].glowingDescription}
               className='group-hover:text-fuchsia-500'
             />
           </SectionComponents>
@@ -43,7 +63,6 @@ export default function Home() {
       </main>
     </>
   )
-
 }
 
 function SectionComponents({ id, children }: any) {

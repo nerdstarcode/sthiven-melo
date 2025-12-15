@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { GithubIcon } from "../Icons";
+import { motion } from "framer-motion";
 
 export interface ProjectCardDTO {
   title: string;
@@ -15,38 +16,71 @@ export interface ProjectCardDTO {
   imageClassName?: string;
 }
 
+const MotionArticle = motion.article;
+
 export function Main({ children, className }: Pick<ProjectCardDTO, 'children' | 'className'>) {
   return (
-    <article className={
-      twMerge(`
+    <MotionArticle
+      className={twMerge(
+        `
         col-span-12 md:col-span-6 4xl:col-span-3 
         w-full 
         flex
-        gap-6
-        items-center
+        flex-col sm:flex-row
+        gap-4 sm:gap-6
+        items-stretch sm:items-center
         justify-between
         rounded-3xl
         border-solid
         border
         border-gray-800
+        bg-zinc-900/60
         shadow-2xl
-      `, className)}>
+        overflow-hidden
+        transition-transform
+        duration-200
+      `,
+        className
+      )}
+      whileHover={{ y: -6, scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
       {children}
-    </article>
+    </MotionArticle>
   )
 }
 
 export function Tumble({ title, className, link = '#', src, imageClassName }: Pick<ProjectCardDTO, 'title' | 'className' | 'link' | 'src' | 'imageClassName'>) {
   return (
-    <Link href={link} className={twMerge('cursor-pointer overflow-hidden rounded-s-lg', className)} target='_blank'>
-      <Image src={src} alt={title} className={`w-full 4xl:h-full 4xl:w-auto 4xl:object-cover h-auto ${imageClassName}`} />
+    <Link
+      href={link}
+      className={twMerge('cursor-pointer overflow-hidden rounded-t-3xl sm:rounded-s-3xl sm:rounded-tr-none', className)}
+      target='_blank'
+    >
+      <motion.div
+        whileHover={{ scale: 1.03 }}
+        transition={{ duration: 0.25 }}
+        className="h-full w-full"
+      >
+        <Image
+          src={src}
+          alt={title}
+          className={twMerge(
+            'w-full h-full object-cover 4xl:h-full 4xl:w-auto 4xl:object-cover',
+            imageClassName
+          )}
+        />
+      </motion.div>
     </Link>
   )
 }
 
 export function Aside({ children, className }: Pick<ProjectCardDTO, 'children' | 'className'>) {
   return (
-    <div className={twMerge('flex flex-col w-full h-full sm:py-2 sm:pr-2 ', className)}>
+    <div className={twMerge('flex flex-col w-full h-full p-4 sm:py-4 sm:pr-4', className)}>
       {children}
     </div>
   )

@@ -60,25 +60,56 @@ import Link from 'next/link'
 import { LinkArrow } from '@/components/Icons'
 import HireMe from '@/components/HireMe'
 import { useDataContext } from '@/contexts/WorkContext'
+import { useLanguageContext } from '@/contexts/LanguageContext'
+
+const uiText = {
+  pt: {
+    experience: 'Experiência',
+    stack: 'Stack',
+    projects: 'Projetos',
+    andMore: 'E mais...',
+    contact: 'Contato',
+    resume: 'Currículo',
+  },
+  en: {
+    experience: 'Experience',
+    stack: 'Stack',
+    projects: 'Projects',
+    andMore: 'And more...',
+    contact: 'Contact',
+    resume: 'Resume',
+  },
+  es: {
+    experience: 'Experiencia',
+    stack: 'Stack',
+    projects: 'Proyectos',
+    andMore: 'Y más...',
+    contact: 'Contacto',
+    resume: 'Currículum',
+  },
+}
 const text = {
   pt: {
     title: 'Transformando ideias em realidade com código e design.',
-    describe: 'Como desenvolvedor full-stack iniciante, dedico-me a transformar ideias em projetos web bem organizados.\nNavegue pelos meus projetos e artigos mais recentes, mostrando minha experiência em React.js e desenvolvimento web.'
+    describe:
+      'Desenvolvedor full-stack com 3 anos de experiência no mercado, atuando em frontend e backend, bancos relacionais e não relacionais, além de cloud (Azure e AWS).\nNavegue pelos meus projetos e artigos mais recentes, que unem código, arquitetura e design para criar experiências web bem organizadas.'
   },
   en: {
     title: 'Turning Vision Into Reality With Code And Design.',
-    describe: "As a beginner full-stack developer, I'm dedicated to turning ideas into well-organized web projects. \nBrowse my latest projects and articles, showcasing my expertise in React.js and web development."
+    describe:
+      "I'm a full-stack developer with 3 years of professional experience, working across frontend, backend, relational and non-relational databases, and cloud (Azure & AWS).\nBrowse my latest projects and articles, where I combine code, architecture and design to build well-structured web experiences."
   },
   es: {
     title: 'Convirtiendo la visión en realidad con código y diseño.',
-    describe: 'Como desarrollador full-stack principiante, me dedico a convertir ideas en proyectos web bien organizados.\nExplore mis últimos proyectos y artículos, mostrando mi experiencia en React.js y desarrollo web.'
+    describe:
+      'Desarrollador full-stack con 3 años de experiencia en el mercado, trabajando tanto en frontend como en backend, con bases de datos relacionales y no relacionales y cloud (Azure y AWS).\nExplore mis últimos proyectos y artículos, donde uno código, arquitectura y diseño para crear experiencias web bien organizadas.'
   },
 }
 
 export default function Home() {
-  const [language, setLanguage] = useState<'pt' | 'es' | 'en'>('pt');
   const [work, setWork] = useState<string | null>()
   const { dataContext, setDataContextData } = useDataContext();
+  const { language } = useLanguageContext();
 
   useEffect(() => {
     if (window) {
@@ -97,14 +128,14 @@ export default function Home() {
           </div>
           <aside className='md:pl-[40vw] gap-8 p-12 animate-fade-right animate-delay-1000 flex flex-col h-full min-h-[50vh] justify-between items-center w-full'>
             <h3 className='text-4xl'>
-              Experience
+              {uiText[language].experience}
             </h3>
             <div className='animate-delay-1000 animate-jump-in grid grid-cols-1 md:grid-cols-3 gap-12 place-items-center'>
               <div className='flex w-full items-center gap-4'>
                 <Image className='rounded-full w-20' alt='irineu' src={figma} priority />
                 <div className='flex flex-col gap-2'>
                   <h4 className='text-2xl'>
-                    1+ year
+                    3+ year
                   </h4>
                   <h6 className='text-xs'>
                     Expertise: medium
@@ -150,7 +181,7 @@ export default function Home() {
                 <Image className='rounded-full w-20' alt='irineu' src={aftereffect} priority />
                 <div className='flex flex-col gap-2'>
                   <h4 className='text-2xl'>
-                    1+ year
+                    3+ year
                   </h4>
                   <h6 className='text-xs'>
                     Expertise: small
@@ -173,14 +204,14 @@ export default function Home() {
           </div>
           <aside className='md:pr-[40vw] p-12 animate-fade-right animate-delay-1000 flex flex-col h-full min-h-[50vh] justify-between items-center w-full gap-8'>
             <h3 className='text-4xl'>
-              Experience
+              {uiText[language].experience}
             </h3>
             <div className='animate-delay-1000 animate-jump-in grid grid-cols-1 md:grid-cols-3 gap-12 place-items-center'>
               <div className='flex w-full items-center gap-4'>
                 <Image className='w-20' alt='irineu' src={react} priority />
                 <div className='flex flex-col gap-2'>
                   <h4 className='text-2xl'>
-                    1+ year
+                    3+ year
                   </h4>
                   <h6 className='text-xs'>
                     Expertise: high
@@ -203,10 +234,10 @@ export default function Home() {
                 <Image className='w-20' alt='irineu' src={angular} priority />
                 <div className='flex flex-col gap-2'>
                   <h4 className='text-2xl'>
-                    1- year
+                    2+ year
                   </h4>
                   <h6 className='text-xs'>
-                    Expertise: small
+                    Expertise: high
                   </h6>
                 </div>
               </div>
@@ -215,7 +246,7 @@ export default function Home() {
                 <Image className='w-20' alt='irineu' src={sass} priority />
                 <div className='flex flex-col gap-2'>
                   <h4 className='text-2xl'>
-                    1+ year
+                    3+ year
                   </h4>
                   <h6 className='text-xs'>
                     Expertise: high
@@ -226,7 +257,7 @@ export default function Home() {
                 <Image className='w-20' alt='irineu' src={storybook} priority />
                 <div className='flex flex-col gap-2'>
                   <h4 className='text-2xl'>
-                    1+ year
+                    3+ year
                   </h4>
                   <h6 className='text-xs'>
                     Expertise: high
@@ -237,7 +268,7 @@ export default function Home() {
                 <Image className='w-20' alt='irineu' src={zod} priority />
                 <div className='flex flex-col gap-2'>
                   <h4 className='text-2xl'>
-                    1- year
+                    3+ year
                   </h4>
                   <h6 className='text-xs'>
                     Expertise: high
@@ -255,7 +286,7 @@ export default function Home() {
         <section className="min-h-screen grid md:grid-cols-3 items-center justify-center flex-col place-items-center text-center">
           <article className='grid grid-cols-1 gap-4 animate-fade-up animate-delay-500'>
             <header>
-              <h2 className='text-4xl'>Stack</h2>
+              <h2 className='text-4xl'>{uiText[language].stack}</h2>
             </header>
             <section id='stack-images' className='grid grid-cols-3 sm:grid-cols-5 gap-4 place-items-center'>
               <Image className='w-20' alt='irineu' src={azure} />
@@ -267,7 +298,7 @@ export default function Home() {
               <Image className='w-20' alt='irineu' src={puppeteer} />
               <Image className='w-20' alt='irineu' src={python} />
               <Image className='w-20' alt='irineu' src={typeorm} />
-              <p className='col-span-3 sm:col-span-1'>And more...</p>
+              <p className='col-span-3 sm:col-span-1'>{uiText[language].andMore}</p>
             </section>
           </article>
           <article className='animate-fade'>
@@ -275,7 +306,7 @@ export default function Home() {
           </article>
           <article>
             <header>
-              <h2 className='text-4xl'>Projects</h2>
+              <h2 className='text-4xl'>{uiText[language].projects}</h2>
             </header>
           </article>
         </section>
@@ -291,28 +322,55 @@ export default function Home() {
             <meta name='description' content='Generated by create next app' />
           </Head>
           <main className='flex items-center text-zinc-400 w-full min-h-screen'>
-            <Layout classname='pt-0'>
-              <div className='grid grid-cols-2 items-center justify-between w-full place-items-center'>
-                <aside className='md:row-span-2'>
-                  <MotionImage variants={quote} initial='initial' animate='animate' priority src={profilePic} alt='CodeBucks' className='w-full h-auto' />
+            <Layout classname='pt-4 md:pt-0'>
+              <div className='grid grid-cols-1 lg:grid-cols-2 gap-10 items-center justify-between w-full place-items-center'>
+                <aside className='order-1 lg:order-none flex justify-center w-full'>
+                  <MotionImage
+                    variants={quote}
+                    initial='initial'
+                    animate='animate'
+                    whileHover={{ scale: 1.03, rotate: -1 }}
+                    transition={{ type: 'spring', stiffness: 120, damping: 15 }}
+                    priority
+                    src={profilePic}
+                    alt='CodeBucks'
+                    className='w-2/3 max-w-xs md:max-w-md lg:max-w-full h-auto rounded-3xl shadow-[0_0_40px_rgba(88,230,217,0.35)]'
+                  />
                 </aside>
                 {/* <article id='article-about' className='w-1/2 flex flex-col items-center self-center'> */}
-                <header className='flex'>
-                  <AnimatedText Tag='h1' text={text[language]?.title} className='md:!text-6xl sm:!text-2xl text-lg text-left' />
-                </header>
-                <main className='col-span-2 md:col-span-1'>
-                  <p className='my-4 text-basefont-medium text-justify'>
-                    {text[language]?.describe}
-                  </p>
-                </main>
-                <footer className='col-span-2 md:col-span-1 flex items-center self-start mt-2 gap-10'>
-                  <Link href='/Sthiven_CV.pdf' target={'_blank'} className='flex items-center bg-dark text-light p-2.5 px-6 rounded-lg text-lg font-semibold hover:bg-light hover:text-black border border-solid border-transparent hover:border-dark'>Resume <LinkArrow className='w-6 ml-1' /></Link>
-                  <Link href='mailto:sthivendevelop@gmail.com' className='text-lg font-medium capitalize text-light underline' >Contact</Link>
-                </footer>
+                <section className='flex flex-col gap-6 w-full max-w-2xl'>
+                  <header className='flex'>
+                    <AnimatedText
+                      Tag='h1'
+                      text={text[language]?.title}
+                      className='!text-3xl sm:!text-4xl md:!text-5xl lg:!text-6xl text-left'
+                    />
+                  </header>
+                  <main>
+                    <p className='my-4 text-base md:text-lg font-medium text-justify leading-relaxed'>
+                      {text[language]?.describe}
+                    </p>
+                  </main>
+                  <footer className='flex flex-wrap items-center gap-4 sm:gap-6 mt-2'>
+                    <Link
+                      href='/Sthiven_CV.pdf'
+                      target={'_blank'}
+                      className='flex items-center bg-dark text-light px-6 py-3 rounded-lg text-base sm:text-lg font-semibold hover:bg-light hover:text-black border border-solid border-transparent hover:border-dark transition-all duration-200'
+                    >
+                      {uiText[language].resume}
+                      <LinkArrow className='w-5 sm:w-6 ml-2' />
+                    </Link>
+                    <Link
+                      href='mailto:sthivendevelop@gmail.com'
+                      className='text-base sm:text-lg font-medium capitalize text-light underline underline-offset-4 hover:text-primary transition-colors'
+                    >
+                      {uiText[language].contact}
+                    </Link>
+                  </footer>
+                </section>
                 {/* </article> */}
               </div>
             </Layout>
-
           </main>
         </>
       )

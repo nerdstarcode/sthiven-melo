@@ -18,17 +18,35 @@ import loginBootstrap from '@p/projects/login-bootstrap.png'
 import nplRedis from '@p/projects/nlp-redis.png'
 import arduino from '@p/projects/arduino.png'
 import spotify from '@p/projects/spotify.png'
+import { useLanguageContext } from '@/contexts/LanguageContext';
+
+const projectsText = {
+  pt: {
+    heading: 'A imaginação aprimora o esforço',
+    metaDescription: 'Projetos que desenvolvi como fullstack, frontend e backend, unindo código, arquitetura e design.',
+  },
+  en: {
+    heading: 'Imagination enhances effort',
+    metaDescription: 'Projects I have built as a fullstack, frontend and backend developer, combining code, architecture and design.',
+  },
+  es: {
+    heading: 'La imaginación potencia el esfuerzo',
+    metaDescription: 'Proyectos que desarrollé como fullstack, frontend y backend, uniendo código, arquitectura y diseño.',
+  },
+}
 
 export default function Projects() {
+  const { language } = useLanguageContext()
+
   return (
     <div className='h-fit min-h-screen'>
       <Head>
         <title>NerdStarCode | Projects Page</title>
-        <meta name='description' content='sobre minha trajetória no desnvolvimento'></meta>
+        <meta name='description' content={projectsText[language].metaDescription}></meta>
       </Head>
       <main className='flex w-full flex-col items-center justify-center'>
         <Layout classname='pt-16 gap-16'>
-          <AnimatedText text='A imaginação aprimora o esforço' className='' />
+          <AnimatedText text={projectsText[language].heading} className='' />
           <section className='grid grid-cols-12 gap-4 sm:gap-8 '>
             {/* <h3 className='col-span-12'>Projetos desenvolvidos</h3> */}
 
