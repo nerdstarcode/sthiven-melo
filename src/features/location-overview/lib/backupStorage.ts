@@ -16,6 +16,11 @@ import type { Sprint } from './sprintsStorage'
 import { loadPersonAllocations, savePersonAllocations } from './personAllocationsStorage'
 import type { PersonAllocation } from './personAllocationsStorage'
 import { loadHiddenWorkItems, saveHiddenWorkItems } from './hiddenWorkItemsStorage'
+import {
+  loadTestExecutions,
+  saveTestExecutions,
+  type TestExecution,
+} from './testExecutionsStorage'
 import { loadTestRuns, saveTestRuns, type StoredTestRuns } from './testRunsStorage'
 import {
   loadPersonSkills,
@@ -43,6 +48,8 @@ export interface AppBackup {
   personSupports?: PersonSupport[]
   /** Opcional: backups anteriores aos test runs não têm. */
   testRuns?: StoredTestRuns[]
+  /** Opcional: testes executados por pessoa, vindos da sincronização. */
+  testExecutions?: TestExecution[]
 }
 
 /** Reúne todos os dados persistidos em localStorage (todas as telas) num único objeto exportável. */
@@ -60,6 +67,7 @@ export function exportAllData(): AppBackup {
     personSkills: loadPersonSkills(),
     personSupports: loadPersonSupports(),
     testRuns: loadTestRuns(),
+    testExecutions: loadTestExecutions(),
   }
 }
 
@@ -83,4 +91,5 @@ export function importAllData(data: unknown): void {
   if (Array.isArray(backup.personSkills)) savePersonSkills(backup.personSkills)
   if (Array.isArray(backup.personSupports)) savePersonSupports(backup.personSupports)
   if (Array.isArray(backup.testRuns)) saveTestRuns(backup.testRuns)
+  if (Array.isArray(backup.testExecutions)) saveTestExecutions(backup.testExecutions)
 }

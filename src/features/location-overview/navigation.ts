@@ -4,6 +4,7 @@ import {
   Cloud,
   Layers,
   LayoutDashboard,
+  PieChart,
   Sparkles,
   SlidersHorizontal,
   Users,
@@ -23,6 +24,25 @@ export const locationOverviewRoutes = {
   levels: `${LOCATION_OVERVIEW_BASE}/niveis`,
   azure: `${LOCATION_OVERVIEW_BASE}/azure`,
   analysis: `${LOCATION_OVERVIEW_BASE}/analise`,
+  dashboard: `${LOCATION_OVERVIEW_BASE}/dashboard`,
+}
+
+/** URL do Dashboard: `?visao=pessoas&pessoa=…&squad=…`. */
+export function dashboardHref({
+  view,
+  personId,
+  squadId,
+}: {
+  view: 'squads' | 'people'
+  personId?: string
+  squadId?: string
+}): string {
+  const params = new URLSearchParams()
+  if (view === 'people') params.set('visao', 'pessoas')
+  if (view === 'people' && personId) params.set('pessoa', personId)
+  if (squadId) params.set('squad', squadId)
+  const query = params.toString()
+  return query ? `${locationOverviewRoutes.dashboard}?${query}` : locationOverviewRoutes.dashboard
 }
 
 /** URL da análise: `?sprint=` e `&squad=` abrem a squad na sprint. */
@@ -39,6 +59,7 @@ export function locationOverviewNav(t: AppsTranslation): AppNavItem[] {
   return [
     { href: locationOverviewRoutes.sprints, label: t.nav.sprints, icon: CalendarRange },
     { href: locationOverviewRoutes.analysis, label: t.analysis.nav, icon: BarChart3 },
+    { href: locationOverviewRoutes.dashboard, label: t.nav.dashboard, icon: PieChart },
     { href: locationOverviewRoutes.allocations, label: t.nav.allocations, icon: LayoutDashboard },
     { href: locationOverviewRoutes.squads, label: t.nav.squads, icon: Layers },
     { href: locationOverviewRoutes.people, label: t.nav.people, icon: Users },
