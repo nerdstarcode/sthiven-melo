@@ -9,7 +9,8 @@ import { normalizeKey } from '../text'
 import type { WorkItemRow } from '../workItems'
 import { loadWorkItems, mergeWorkItems, saveWorkItems } from '../workItemsStorage'
 import { iterationSprintInfo, testRunsToReportFields, type TestRunsSummary } from './mappers'
-import type { AzureIteration, AzureTeamMember } from './types'
+import { upsertTestRuns } from '../testRunsStorage'
+import type { AzureIteration, AzureTeamMember, AzureTestRun } from './types'
 
 /** Resultado de uma sincronização: o que foi gravado, ou por que nada foi gravado. */
 export type SyncOutcome<T> = { ok: true; result: T } | { ok: false; reason: string }
@@ -179,7 +180,17 @@ function syncTestReport(
 ): boolean {
   if (!sprint || !testRuns || testRuns.runCount === 0) return false
   upsertTestReportFromRuns(squadId, sprint.id, testRuns)
+  upsertTestRuns({ squadId, sprintId: sprint.id, summary: testRuns })
   return true
+}
+
+/**
+ * Test runs da sprint do time: a API devolve os do projeto inteiro, então ficam só os da
+ * iteration (o mesmo Iteration Path, sem diferenciar maiúsculas). Runs sem iteration ficam de fora.
+ */
+export function runsOfIteration(runs: AzureTestRun[], iterationPath: string): AzureTestRun[] {
+  const path = normalizeKey(iterationPath)
+  return runs.filter((run) => run.iteration && normalizeKey(run.iteration) === path)
 }
 
 export function syncSprintToBase(input: SprintSyncInput): SprintSyncResult {

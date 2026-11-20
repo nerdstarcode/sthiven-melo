@@ -8,8 +8,15 @@ import { DataTable } from '@/components/organisms/DataTable'
 import { useAzureRequest } from '@/features/location-overview/azure/useAzureRequest'
 import * as azureApi from '@/features/location-overview/lib/azure/api'
 import type { AzureConfig } from '@/features/location-overview/lib/azure/azureConfigStorage'
-import { azureWorkItemToRow } from '@/features/location-overview/lib/azure/mappers'
-import { syncSprintToBase, syncTeamToBase } from '@/features/location-overview/lib/azure/syncToBase'
+import {
+  azureWorkItemToRow,
+  summarizeTestRuns,
+} from '@/features/location-overview/lib/azure/mappers'
+import {
+  runsOfIteration,
+  syncSprintToBase,
+  syncTeamToBase,
+} from '@/features/location-overview/lib/azure/syncToBase'
 import type {
   AzureIteration,
   AzureIterationTimeFrame,
@@ -20,7 +27,12 @@ import { format, useTranslation } from '@/i18n'
 /** Leituras usadas pela tela; trocáveis nos testes e stories. */
 export type AzureReader = Pick<
   typeof azureApi,
-  'listProjects' | 'listTeams' | 'listTeamMembers' | 'listTeamIterations' | 'getIterationWorkItems'
+  | 'listProjects'
+  | 'listTeams'
+  | 'listTeamMembers'
+  | 'listTeamIterations'
+  | 'getIterationWorkItems'
+  | 'listTestRuns'
 >
 
 export interface AzureExplorerProps {
@@ -33,6 +45,9 @@ export interface AzureExplorerProps {
   onOpenFlow?: () => void
   api?: AzureReader
 }
+
+/** `syncingId` enquanto a sincronização em lote roda. */
+const ALL = '__all__'
 
 const TIME_FRAME_TONE: Record<AzureIterationTimeFrame, BadgeTone> = {
   past: 'neutral',
@@ -77,6 +92,7 @@ export function AzureExplorer({
   const t = useTranslation('apps')
   const [message, setMessage] = useState<string>()
   const [syncingId, setSyncingId] = useState<string | null>(null)
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null)
 
   const connection = `${config.organization}|${config.pat}`
   const projects = useAzureRequest(connection, (signal) => api.listProjects(config, signal))
@@ -113,29 +129,86 @@ export function AzureExplorer({
     )
   }
 
+  /** Test runs da iteration; null sem datas ou quando o token não pode ler testes. */
+  const fetchTestRuns = async (iteration: AzureIteration) => {
+    const { startDate, finishDate } = iteration.attributes
+    if (!projectId || !startDate || !finishDate) return { summary: null, failed: false }
+    try {
+      const runs = await api.listTestRuns(config, projectId, startDate, finishDate)
+      return { summary: summarizeTestRuns(runsOfIteration(runs, iteration.path)), failed: false }
+    } catch {
+      return { summary: null, failed: true }
+    }
+  }
+
+  /** Grava work items e test runs de uma iteration na base. */
+  const syncOne = async (iteration: AzureIteration) => {
+    const items = await api.getIterationWorkItems(config, projectId!, iteration.path)
+    const tests = await fetchTestRuns(iteration)
+    const result = syncSprintToBase({
+      teamName: team!.name,
+      members: members.data!,
+      iteration,
+      workItems: items.map((item) => azureWorkItemToRow(item, config)),
+      testRuns: tests.summary,
+    })
+    return { result, tests }
+  }
+
   const syncIteration = async (iteration: AzureIteration) => {
     if (!team || !members.data || !projectId) return
     setSyncingId(iteration.id)
     setMessage(undefined)
     try {
-      const items = await api.getIterationWorkItems(config, projectId, iteration.path)
-      const result = syncSprintToBase({
-        teamName: team.name,
-        members: members.data,
-        iteration,
-        workItems: items.map((item) => azureWorkItemToRow(item, config)),
-        testRuns: null,
-      })
-      setMessage(
-        format(result.sprintCreated === null ? t.azure.iterationNotSprint : t.azure.iterationSynced, {
-          name: iteration.name,
-          count: result.workItems,
-        }),
+      const { result, tests } = await syncOne(iteration)
+      const base = format(
+        result.sprintCreated === null ? t.azure.iterationNotSprint : t.azure.iterationSynced,
+        { name: iteration.name, count: result.workItems },
       )
+      const testsText = tests.failed
+        ? t.azure.testRunsUnavailable
+        : format(t.azure.testRunsSynced, { count: tests.summary?.runCount ?? 0 })
+      setMessage(`${base} ${testsText}`)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error))
     } finally {
       setSyncingId(null)
+    }
+  }
+
+  /** Sincroniza, uma a uma, as sprints passadas e a atual (as futuras ainda não têm entrega). */
+  const syncAll = async () => {
+    if (!team || !members.data || !projectId || !iterations.data) return
+    const targets = iterations.data.filter((it) => it.attributes.timeFrame !== 'future')
+    setSyncingId(ALL)
+    setMessage(undefined)
+    let items = 0
+    let withTests = 0
+    let done = 0
+    let testsFailed = false
+    for (const iteration of targets) {
+      setProgress({ done, total: targets.length })
+      try {
+        const { result, tests } = await syncOne(iteration)
+        items += result.workItems
+        if (tests.summary && tests.summary.runCount > 0) withTests += 1
+        testsFailed ||= tests.failed
+        done += 1
+      } catch (error) {
+        setMessage(
+          format(t.azure.syncFailed, {
+            name: iteration.name,
+            error: error instanceof Error ? error.message : String(error),
+          }),
+        )
+        break
+      }
+    }
+    setProgress(null)
+    setSyncingId(null)
+    if (done === targets.length) {
+      const summary = format(t.azure.allSynced, { count: done, items, withTests })
+      setMessage(testsFailed ? `${summary} ${t.azure.testRunsUnavailable}` : summary)
     }
   }
 
@@ -226,12 +299,24 @@ export function AzureExplorer({
             <Button disabled={!members.data || !iterations.data} onClick={syncTeam}>
               <DownloadCloud size={14} aria-hidden /> {t.azure.syncTeam}
             </Button>
+            <Button
+              variant='secondary'
+              disabled={!members.data || !iterations.data?.length || syncingId !== null}
+              onClick={syncAll}
+            >
+              <DownloadCloud size={14} aria-hidden /> {t.azure.syncAll}
+            </Button>
             {onOpenFlow && (
               <Button variant='ghost' onClick={onOpenFlow}>
                 {t.azure.openFlow}
               </Button>
             )}
           </div>
+          {progress && (
+            <p role='status' className='text-sm text-fg'>
+              {format(t.azure.syncProgress, progress)}
+            </p>
+          )}
           {message && (
             <p role='status' className='text-sm text-fg-strong'>
               {message}

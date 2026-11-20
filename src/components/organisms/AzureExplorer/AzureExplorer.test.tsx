@@ -3,8 +3,13 @@ import { useState } from 'react'
 import { fakeAzureReader } from '@/features/location-overview/azure/fakeAzureReader'
 import { AzureApiError } from '@/features/location-overview/lib/azure/client'
 import { DEFAULT_AZURE_CONFIG } from '@/features/location-overview/lib/azure/azureConfigStorage'
-import { FIXTURE_ITERATIONS } from '@/features/location-overview/lib/azure/sprintFixtures'
+import {
+  FIXTURE_ITERATIONS,
+  FIXTURE_TEST_RUNS,
+} from '@/features/location-overview/lib/azure/sprintFixtures'
+import { loadSprints } from '@/features/location-overview/lib/sprintsStorage'
 import { loadSquads } from '@/features/location-overview/lib/squadsStorage'
+import { loadTestRuns } from '@/features/location-overview/lib/testRunsStorage'
 import { loadWorkItems } from '@/features/location-overview/lib/workItemsStorage'
 import { renderWithProviders } from '@/test/utils'
 import { AzureExplorer, type AzureReader } from './AzureExplorer'
@@ -49,8 +54,36 @@ describe('AzureExplorer', () => {
     await user.click(
       await screen.findByRole('button', { name: `Buscar work items de ${name}` }),
     )
-    expect(await screen.findByRole('status')).toHaveTextContent(`${name}: 2 work item(s) gravados.`)
+    const status = await screen.findByRole('status')
+    expect(status).toHaveTextContent(`${name}: 2 work item(s) gravados.`)
+    expect(status).toHaveTextContent(`Test runs: ${FIXTURE_TEST_RUNS.length}.`)
     expect(loadWorkItems().map((w) => w.id)).toEqual(expect.arrayContaining([501, 502]))
+    expect(loadTestRuns()).toHaveLength(1)
+  })
+
+  it('sem permissão de testes grava os work items e avisa', async () => {
+    const api = fakeAzureReader({
+      listTestRuns: async () => {
+        throw new AzureApiError(403, 'Sem permissão.')
+      },
+    })
+    const { user } = renderWithProviders(<Harness api={api} />)
+    await choose(user)
+    const name = FIXTURE_ITERATIONS[0].name
+    await user.click(await screen.findByRole('button', { name: `Buscar work items de ${name}` }))
+    expect(await screen.findByRole('status')).toHaveTextContent('Test Management: Read')
+    expect(loadWorkItems()).not.toHaveLength(0)
+  })
+
+  it('sincroniza todas as sprints passadas e a atual de uma vez', async () => {
+    const { user } = renderWithProviders(<Harness />)
+    await choose(user)
+    await screen.findByRole('cell', { name: FIXTURE_ITERATIONS[0].name })
+    await user.click(screen.getByRole('button', { name: 'Sincronizar sprints passadas e a atual' }))
+    expect(
+      await screen.findByText('2 sprint(s) sincronizada(s): 4 work item(s), 1 com test runs.'),
+    ).toBeInTheDocument()
+    expect(loadSprints()).toHaveLength(2)
   })
 
   it('mostra o erro da API com "tentar de novo"', async () => {

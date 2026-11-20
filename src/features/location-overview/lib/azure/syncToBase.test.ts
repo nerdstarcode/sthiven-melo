@@ -15,8 +15,11 @@ import {
   upsertPeopleFromTeam,
   upsertSprintFromIteration,
   upsertSquadByName,
+  runsOfIteration,
   upsertTestReportFromRuns,
 } from './syncToBase'
+import type { AzureTestRun } from './types'
+import { loadTestRuns } from '../testRunsStorage'
 
 describe('upsertSquadByName', () => {
   it('reaproveita a squad de mesmo nome, sem diferenciar maiúsculas', () => {
@@ -122,6 +125,12 @@ describe('syncSprintToBase', () => {
     })
     expect(loadWorkItems()).toHaveLength(13)
     expect(loadSprints()[0].totalValidDays).toBe(10)
+    const [stored] = loadTestRuns()
+    expect(stored).toMatchObject({
+      squadId: loadSquads()[0].id,
+      sprintId: loadSprints()[0].id,
+      summary: FIXTURE_TEST_RUNS_SUMMARY,
+    })
   })
 
   it('não grava relatório de testes sem runs', () => {
@@ -134,5 +143,26 @@ describe('syncSprintToBase', () => {
     })
     expect(result.testReport).toBe(false)
     expect(loadTestReports()).toEqual([])
+    expect(loadTestRuns()).toEqual([])
+  })
+})
+
+describe('runsOfIteration', () => {
+  const run = (id: number, iteration?: string): AzureTestRun => ({
+    id,
+    name: `Run ${id}`,
+    state: 'Completed',
+    isAutomated: false,
+    totalTests: 1,
+    passedTests: 1,
+    incompleteTests: 0,
+    notApplicableTests: 0,
+    unanalyzedTests: 0,
+    iteration,
+  })
+
+  it('fica só com os runs da iteration, sem diferenciar maiúsculas', () => {
+    const runs = [run(1, 'Proj\\Portal\\Sprint 10'), run(2, 'proj\\portal\\sprint 10'), run(3, 'Proj\\Outro\\Sprint 10'), run(4)]
+    expect(runsOfIteration(runs, 'Proj\\Portal\\Sprint 10').map((r) => r.id)).toEqual([1, 2])
   })
 })

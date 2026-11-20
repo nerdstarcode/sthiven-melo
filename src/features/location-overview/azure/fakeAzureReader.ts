@@ -1,5 +1,10 @@
 import type { AzureReader } from '@/components/organisms/AzureExplorer'
-import { FIXTURE_ITERATIONS, FIXTURE_MEMBERS } from '@/features/location-overview/lib/azure/sprintFixtures'
+import {
+  FIXTURE_ITERATION,
+  FIXTURE_ITERATIONS,
+  FIXTURE_MEMBERS,
+  FIXTURE_TEST_RUNS,
+} from '@/features/location-overview/lib/azure/sprintFixtures'
 import type { AzureWorkItem } from '@/features/location-overview/lib/azure/types'
 
 /** Work item no formato da API, com os campos que o mapper lê. */
@@ -28,6 +33,9 @@ export function fakeAzureReader(overrides: Partial<AzureReader> = {}): AzureRead
       workItem(501, 5, path),
       workItem(502, 3, path),
     ],
+    // Todos os runs são da Sprint 08: as outras iterations ficam sem test runs.
+    listTestRuns: async () =>
+      FIXTURE_TEST_RUNS.map((run) => ({ ...run, iteration: FIXTURE_ITERATION.path })),
     ...overrides,
   }
 }
