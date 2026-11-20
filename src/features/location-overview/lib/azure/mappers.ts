@@ -52,7 +52,8 @@ export function azureWorkItemToRow(item: AzureWorkItem, config: AzureConfig): Wo
     state: stringField(item, 'System.State'),
     tags: stringField(item, 'System.Tags'),
     iterationPath: stringField(item, 'System.IterationPath'),
-    storyPoints: item.fields[config.storyPointsField] ?? item.fields[FALLBACK_STORY_POINTS_FIELD] ?? 0,
+    storyPoints:
+      item.fields[config.storyPointsField] ?? item.fields[FALLBACK_STORY_POINTS_FIELD] ?? 0,
     effort: item.fields['Microsoft.VSTS.Scheduling.Effort'] ?? 0,
     timeCriticality: fieldOrSuffix(item, TIME_CRITICALITY_FIELD, 'TimeCriticality'),
     wsjf: fieldOrSuffix(item, config.wsjfField, 'WSJF'),
@@ -66,7 +67,9 @@ export function azureWorkItemToRow(item: AzureWorkItem, config: AzureConfig): Wo
 }
 
 /** Número/Fiscal Year da sprint pelo nome da iteration ("Sprint 08 - FY25-26"), com o path como fallback. */
-export function iterationSprintInfo(iteration: AzureIteration): { number: number; fiscalYear: string } | null {
+export function iterationSprintInfo(
+  iteration: AzureIteration,
+): { number: number; fiscalYear: string } | null {
   const fromName = parseSprintInfo(iteration.name)
   const info = fromName.sprint ? fromName : parseSprintInfo(iteration.path)
   if (!info.sprint) return null

@@ -78,7 +78,9 @@ describe('agrupamentos', () => {
   })
 
   it('conta as tasks filhas de cada User Story, Bug e Enabler', () => {
-    expect(FIXTURE_USER_STORIES.map((us) => [us.id, us.workItemType, us.tasks, us.tasksDone])).toEqual([
+    expect(
+      FIXTURE_USER_STORIES.map((us) => [us.id, us.workItemType, us.tasks, us.tasksDone]),
+    ).toEqual([
       [101, 'User Story', 2, 2],
       [103, 'User Story', 2, 0],
       [102, 'User Story', 1, 1],
@@ -97,7 +99,12 @@ describe('allocationComparison', () => {
     expect(statusOf('Alan Turing')).toBe('acima') // PL 50%: max 7.5, 10 SP
     // SR 100%: capacity 15 / max 20; Faixa QA 6.6–9.9 começa abaixo do capacity.
     const grace = FIXTURE_ALLOCATION.find((row) => row.name === 'Grace Hopper')
-    expect(grace).toMatchObject({ isQa: true, expectedMin: 6.6, expectedMax: 9.9, status: 'abaixo' })
+    expect(grace).toMatchObject({
+      isQa: true,
+      expectedMin: 6.6,
+      expectedMax: 9.9,
+      status: 'abaixo',
+    })
   })
 
   it('divide a Faixa QA entre os QAs proporcionalmente ao Capacity', () => {
@@ -122,8 +129,16 @@ describe('allocationComparison', () => {
       qaMinPercent: 20,
       qaMaxPercent: 30,
     })
-    expect(rows.find((r) => r.name === 'QA Jr')).toMatchObject({ capacity: 5, expectedMin: 5, expectedMax: 7.5 })
-    expect(rows.find((r) => r.name === 'QA Sr')).toMatchObject({ capacity: 15, expectedMin: 15, expectedMax: 22.5 })
+    expect(rows.find((r) => r.name === 'QA Jr')).toMatchObject({
+      capacity: 5,
+      expectedMin: 5,
+      expectedMax: 7.5,
+    })
+    expect(rows.find((r) => r.name === 'QA Sr')).toMatchObject({
+      capacity: 15,
+      expectedMin: 15,
+      expectedMax: 22.5,
+    })
   })
 
   it('QA sem alocação fica "sem alocação", mantendo a Faixa QA', () => {
@@ -140,14 +155,25 @@ describe('allocationComparison', () => {
       qaMinPercent: 20,
       qaMaxPercent: 30,
     })
-    expect(rows.find((r) => r.name === 'Grace Hopper')).toMatchObject({ status: 'sem-alocacao', expectedMin: 6.6, expectedMax: 9.9 })
+    expect(rows.find((r) => r.name === 'Grace Hopper')).toMatchObject({
+      status: 'sem-alocacao',
+      expectedMin: 6.6,
+      expectedMax: 9.9,
+    })
   })
 
   it('marca quem não está cadastrado ou não tem alocação', () => {
-    const outsider: WorkItemRow = { ...FIXTURE_WORK_ITEMS[0], id: 999, assignedTo: 'Linus', email: 'linus@example.com' }
+    const outsider: WorkItemRow = {
+      ...FIXTURE_WORK_ITEMS[0],
+      id: 999,
+      assignedTo: 'Linus',
+      email: 'linus@example.com',
+    }
     const rows = allocationComparison({
       members: FIXTURE_MEMBERS,
-      personPoints: [{ name: 'Linus', email: outsider.email, storyPoints: 3, deliveredPoints: 0, itemCount: 1 }],
+      personPoints: [
+        { name: 'Linus', email: outsider.email, storyPoints: 3, deliveredPoints: 0, itemCount: 1 },
+      ],
       totalPoints: 33,
       people: FIXTURE_PEOPLE,
       allocations: FIXTURE_ALLOCATIONS.filter((a) => a.personId !== 'p1'),
@@ -158,7 +184,10 @@ describe('allocationComparison', () => {
       qaMinPercent: 20,
       qaMaxPercent: 30,
     })
-    expect(rows.find((r) => r.name === 'Linus')).toMatchObject({ isMember: false, status: 'sem-cadastro' })
+    expect(rows.find((r) => r.name === 'Linus')).toMatchObject({
+      isMember: false,
+      status: 'sem-cadastro',
+    })
     expect(rows.find((r) => r.name === 'Ada Lovelace')?.status).toBe('sem-alocacao')
   })
 
@@ -176,14 +205,23 @@ describe('allocationComparison', () => {
       qaMinPercent: 20,
       qaMaxPercent: 30,
     })
-    expect(rows.find((r) => r.name === 'Grace Hopper')).toMatchObject({ isMember: false, percentage: 100, assigned: 0 })
+    expect(rows.find((r) => r.name === 'Grace Hopper')).toMatchObject({
+      isMember: false,
+      percentage: 100,
+      assigned: 0,
+    })
   })
 })
 
 describe('unassignedByType', () => {
   it('conta os itens sem responsável por tipo, incluindo Tasks', () => {
-    const items = [...FIXTURE_WORK_ITEMS, { ...FIXTURE_WORK_ITEMS[8], id: 299, assignedTo: '', email: '' }]
-    expect(unassignedByType(items, FIXTURE_POINT_TYPES).map((g) => [g.key, g.count, g.storyPoints])).toEqual([
+    const items = [
+      ...FIXTURE_WORK_ITEMS,
+      { ...FIXTURE_WORK_ITEMS[8], id: 299, assignedTo: '', email: '' },
+    ]
+    expect(
+      unassignedByType(items, FIXTURE_POINT_TYPES).map((g) => [g.key, g.count, g.storyPoints]),
+    ).toEqual([
       ['Bug', 1, 3],
       ['Enabler', 1, 2],
       ['Task', 1, 0],
@@ -212,24 +250,42 @@ describe('classifyQaRange', () => {
 })
 
 describe('sprintAllocation', () => {
-  const input = { people: FIXTURE_PEOPLE, allocations: FIXTURE_ALLOCATIONS, levels: DEFAULT_LEVELS, squadId: 'sq1', sprint: FIXTURE_SPRINT }
+  const input = {
+    people: FIXTURE_PEOPLE,
+    allocations: FIXTURE_ALLOCATIONS,
+    levels: DEFAULT_LEVELS,
+    squadId: 'sq1',
+    sprint: FIXTURE_SPRINT,
+  }
 
   it('soma capacity/max de quem está alocado na squad/sprint', () => {
     const summary = sprintAllocation(input, FIXTURE_POINTS_BY_PERSON.people)
     // Ada SR 100% (10 dias): 15/20 · Alan PL 50% (5 dias): 5/7.5 · Grace SR 100%: 15/20
     expect(summary).toMatchObject({ capacity: 35, max: 47.5 })
-    expect(summary.entries.find((e) => e.name === 'Alan Turing')).toMatchObject({ percentage: 50, days: 5, assigned: 10 })
+    expect(summary.entries.find((e) => e.name === 'Alan Turing')).toMatchObject({
+      percentage: 50,
+      days: 5,
+      assigned: 10,
+    })
   })
 
   it('fica vazio sem squad ou sprint local', () => {
-    expect(sprintAllocation({ ...input, squadId: undefined }, [])).toEqual({ entries: [], capacity: 0, max: 0, missingLevel: 0 })
+    expect(sprintAllocation({ ...input, squadId: undefined }, [])).toEqual({
+      entries: [],
+      capacity: 0,
+      max: 0,
+      missingLevel: 0,
+    })
   })
 
   it('soma alocações repetidas da mesma pessoa, casa nível sem diferenciar maiúsculas e sinaliza quem fica sem nível', () => {
     const summary = sprintAllocation(
       {
         ...input,
-        people: [{ ...FIXTURE_PEOPLE[0], nivel: 'sr ' }, { ...FIXTURE_PEOPLE[1], nivel: '' }],
+        people: [
+          { ...FIXTURE_PEOPLE[0], nivel: 'sr ' },
+          { ...FIXTURE_PEOPLE[1], nivel: '' },
+        ],
         allocations: [
           { id: 'x1', personId: 'p1', squadId: 'sq1', sprintId: 's8', percentage: 50 },
           { id: 'x2', personId: 'p1', squadId: 'sq1', sprintId: 's8', percentage: 50 },
@@ -239,7 +295,10 @@ describe('sprintAllocation', () => {
       [],
     )
     expect(summary).toMatchObject({ capacity: 15, max: 20, missingLevel: 1 })
-    expect(summary.entries.find((e) => e.personId === 'p1')).toMatchObject({ percentage: 100, missingLevel: false })
+    expect(summary.entries.find((e) => e.personId === 'p1')).toMatchObject({
+      percentage: 100,
+      missingLevel: false,
+    })
   })
 })
 
@@ -247,7 +306,9 @@ describe('isQaPerson', () => {
   const person = FIXTURE_PEOPLE[0]
 
   it('usa o Tipo do cargo cadastrado quando existe', () => {
-    expect(isQaPerson(person, [{ id: 'c', cargo: person.cargo, tipo: 'QA', nivel: 'SR' }])).toBe(true)
+    expect(isQaPerson(person, [{ id: 'c', cargo: person.cargo, tipo: 'QA', nivel: 'SR' }])).toBe(
+      true,
+    )
   })
 
   it('cai para o nome do cargo quando não há cadastro', () => {
@@ -277,7 +338,9 @@ describe('computeSprintMetrics', () => {
   })
 
   it('tira os itens ocultos (e as Tasks filhas) dos números, mas mantém na tabela marcados', () => {
-    const items = FIXTURE_WORK_ITEMS.map((item) => (item.id === 101 ? { ...item, effort: 4 } : item))
+    const items = FIXTURE_WORK_ITEMS.map((item) =>
+      item.id === 101 ? { ...item, effort: 4 } : item,
+    )
     const metrics = computeSprintMetrics({
       items,
       pointTypes: FIXTURE_POINT_TYPES,
@@ -295,7 +358,10 @@ describe('computeSprintMetrics', () => {
     expect(metrics.totalPoints).toBe(25) // 33 - 8 da 101
     expect(metrics.totalEffort).toBe(0)
     expect(metrics.byPerson.find((p) => p.name === 'Ada Lovelace')?.storyPoints).toBe(2)
-    expect(metrics.userStories.find((us) => us.id === 101)).toMatchObject({ hidden: true, tasks: 2 })
+    expect(metrics.userStories.find((us) => us.id === 101)).toMatchObject({
+      hidden: true,
+      tasks: 2,
+    })
     expect(metrics.userStories.filter((us) => us.hidden)).toHaveLength(1)
   })
 })

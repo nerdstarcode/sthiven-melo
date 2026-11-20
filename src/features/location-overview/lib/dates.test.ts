@@ -3,11 +3,16 @@ import { formatDateBR, formatDayMonth, toDateKey, workingDaysBetween } from './d
 
 describe('workingDaysBetween', () => {
   it('pula fins de semana', () => {
-    expect(workingDaysBetween('2025-09-05T00:00:00Z', '2025-09-08T00:00:00Z')).toEqual(['2025-09-05', '2025-09-08'])
+    expect(workingDaysBetween('2025-09-05T00:00:00Z', '2025-09-08T00:00:00Z')).toEqual([
+      '2025-09-05',
+      '2025-09-08',
+    ])
   })
 
   it('pula os days off do team (intervalo inclusivo)', () => {
-    const days = workingDaysBetween('2025-09-01', '2025-09-05', [{ start: '2025-09-02T00:00:00Z', end: '2025-09-03T00:00:00Z' }])
+    const days = workingDaysBetween('2025-09-01', '2025-09-05', [
+      { start: '2025-09-02T00:00:00Z', end: '2025-09-03T00:00:00Z' },
+    ])
     expect(days).toEqual(['2025-09-01', '2025-09-04', '2025-09-05'])
   })
 

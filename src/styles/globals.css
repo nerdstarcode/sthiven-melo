@@ -20,6 +20,19 @@
 
   --animate-spin-slow: spin 8s linear infinite;
 
+  /* Tokens semânticos dos apps de /projects (painéis, tabelas, formulários) */
+  --color-surface: #18181b;
+  --color-surface-elevated: #27272a;
+  --color-surface-muted: #1f1f23;
+  --color-line: #3f3f46;
+  --color-fg: #a1a1aa;
+  --color-fg-strong: #f4f4f5;
+  --color-accent: #58e6d9;
+  --color-accent-strong: #2cc4b6;
+  --color-success: #22c55e;
+  --color-warning: #eab308;
+  --color-danger: #ef4444;
+
   --background-image-circularDark: repeating-radial-gradient(
     rgba(255, 255, 255, 0.4) 2px,
     #18181b 5px,

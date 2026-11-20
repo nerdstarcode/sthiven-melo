@@ -91,6 +91,11 @@ describe('summarizeCoverage', () => {
   })
 
   it('filtra por tipo de skill', () => {
-    expect(summarizeCoverage(coverage, 'soft')).toEqual({ total: 1, covered: 0, partial: 0, gap: 1 })
+    expect(summarizeCoverage(coverage, 'soft')).toEqual({
+      total: 1,
+      covered: 0,
+      partial: 0,
+      gap: 1,
+    })
   })
 })

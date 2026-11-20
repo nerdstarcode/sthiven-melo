@@ -37,10 +37,18 @@ export function mergeSquads(sourceId: string, targetId: string): SquadMergeResul
   const source = squads.find((s) => s.id === sourceId)
   const target = squads.find((s) => s.id === targetId)
   if (!source || !target || sourceId === targetId) {
-    return { allocationsMoved: 0, allocationsDiscarded: 0, testReportsMoved: 0, testReportsDiscarded: 0 }
+    return {
+      allocationsMoved: 0,
+      allocationsDiscarded: 0,
+      testReportsMoved: 0,
+      testReportsDiscarded: 0,
+    }
   }
 
-  const merged = { ...target, aliases: dedupeAliases(target.name, [...(target.aliases ?? []), ...squadNames(source)]) }
+  const merged = {
+    ...target,
+    aliases: dedupeAliases(target.name, [...(target.aliases ?? []), ...squadNames(source)]),
+  }
   saveSquads(squads.filter((s) => s.id !== sourceId).map((s) => (s.id === targetId ? merged : s)))
 
   const allocations = loadPersonAllocations()
@@ -61,7 +69,9 @@ export function mergeSquads(sourceId: string, targetId: string): SquadMergeResul
   savePersonAllocations(nextAllocations)
 
   const reports = loadTestReports()
-  const targetSprintIds = new Set(reports.filter((r) => r.squadId === targetId).map((r) => r.sprintId))
+  const targetSprintIds = new Set(
+    reports.filter((r) => r.squadId === targetId).map((r) => r.sprintId),
+  )
   let testReportsMoved = 0
   let testReportsDiscarded = 0
   const nextReports = reports.flatMap((r) => {

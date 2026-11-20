@@ -127,7 +127,11 @@ export function stateColor(state: string, { mode, isDark }: StateColorOptions): 
  * Cor de cada State de `states`: a padrão quando existe; os demais giram pela `palette`,
  * pulando as cores já usadas pelos States padrão para não se confundirem com eles.
  */
-export function stateColors(states: string[], palette: string[], options: StateColorOptions): string[] {
+export function stateColors(
+  states: string[],
+  palette: string[],
+  options: StateColorOptions,
+): string[] {
   const fixed = states.map((state) => stateColor(state, options))
   const used = new Set(fixed.filter(Boolean).map((color) => color!.toUpperCase()))
   const rotation = palette.filter((color) => !used.has(color.toUpperCase()))

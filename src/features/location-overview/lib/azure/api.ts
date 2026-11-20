@@ -23,11 +23,19 @@ export function listProjects(config: AzureConfig, signal?: AbortSignal): Promise
   return azureFetchAll<AzureProject>(config, '_apis/projects', { query: { $top: 500 }, signal })
 }
 
-export async function listTeams(config: AzureConfig, project: string, signal?: AbortSignal): Promise<AzureTeam[]> {
-  const { value } = await azureFetch<{ value: AzureTeam[] }>(config, `_apis/projects/${seg(project)}/teams`, {
-    query: { $top: 500 },
-    signal,
-  })
+export async function listTeams(
+  config: AzureConfig,
+  project: string,
+  signal?: AbortSignal,
+): Promise<AzureTeam[]> {
+  const { value } = await azureFetch<{ value: AzureTeam[] }>(
+    config,
+    `_apis/projects/${seg(project)}/teams`,
+    {
+      query: { $top: 500 },
+      signal,
+    },
+  )
   return [...value].sort((a, b) => a.name.localeCompare(b.name))
 }
 
@@ -80,19 +88,24 @@ async function queryIterationWorkItemIds(
   signal?: AbortSignal,
 ): Promise<number[]> {
   const escapedPath = iterationPath.replace(/'/g, "''")
-  const { workItems } = await azureFetch<AzureWiqlResult>(config, `${seg(project)}/_apis/wit/wiql`, {
-    method: 'POST',
-    body: {
-      query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = @project AND [System.IterationPath] UNDER '${escapedPath}' ORDER BY [System.Id]`,
+  const { workItems } = await azureFetch<AzureWiqlResult>(
+    config,
+    `${seg(project)}/_apis/wit/wiql`,
+    {
+      method: 'POST',
+      body: {
+        query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = @project AND [System.IterationPath] UNDER '${escapedPath}' ORDER BY [System.Id]`,
+      },
+      signal,
     },
-    signal,
-  })
+  )
   return workItems.map((item) => item.id)
 }
 
 function chunk<T>(items: T[], size: number): T[][] {
   const chunks: T[][] = []
-  for (let start = 0; start < items.length; start += size) chunks.push(items.slice(start, start + size))
+  for (let start = 0; start < items.length; start += size)
+    chunks.push(items.slice(start, start + size))
   return chunks
 }
 
@@ -106,11 +119,15 @@ async function getWorkItemsBatch(
 ): Promise<AzureWorkItem[]> {
   const items: AzureWorkItem[] = []
   for (const batch of chunk(ids, WORK_ITEMS_BATCH_SIZE)) {
-    const { value } = await azureFetch<{ value: AzureWorkItem[] }>(config, `${seg(project)}/_apis/wit/workitemsbatch`, {
-      method: 'POST',
-      body: { ids: batch, errorPolicy: 'omit' },
-      signal,
-    })
+    const { value } = await azureFetch<{ value: AzureWorkItem[] }>(
+      config,
+      `${seg(project)}/_apis/wit/workitemsbatch`,
+      {
+        method: 'POST',
+        body: { ids: batch, errorPolicy: 'omit' },
+        signal,
+      },
+    )
     items.push(...value.filter(Boolean))
   }
   return items
@@ -163,7 +180,10 @@ export async function listTestRuns(
   const byId = new Map<number, AzureTestRun>()
   for (const window of dateWindows(start, queryEnd > now ? now : queryEnd, TEST_RUNS_WINDOW_DAYS)) {
     const runs = await azureFetchAll<AzureTestRun>(config, `${seg(project)}/_apis/test/runs`, {
-      query: { minLastUpdatedDate: window.start.toISOString(), maxLastUpdatedDate: window.end.toISOString() },
+      query: {
+        minLastUpdatedDate: window.start.toISOString(),
+        maxLastUpdatedDate: window.end.toISOString(),
+      },
       signal,
     })
     for (const run of runs) byId.set(run.id, run)

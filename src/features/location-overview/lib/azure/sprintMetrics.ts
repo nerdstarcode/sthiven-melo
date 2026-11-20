@@ -7,18 +7,23 @@ import { excludeHidden } from '../hiddenWorkItemsStorage'
 import type { CargoConfig } from '../cargosStorage'
 import type { LevelConfig } from '../levelsStorage'
 import type { Person } from '../peopleStorage'
-import { computeAllocatedDays, findLevelFor, pointsForEntry, type PersonAllocation } from '../personAllocationsStorage'
+import {
+  computeAllocatedDays,
+  findLevelFor,
+  pointsForEntry,
+  type PersonAllocation,
+} from '../personAllocationsStorage'
 import type { Sprint } from '../sprintsStorage'
 import { summarizeTestRuns, type TestRunsSummary } from './mappers'
 import type { AzureTeamMember, AzureTestRun } from './types'
 
 export const UNASSIGNED_LABEL = 'Sem responsável'
 
-
 const QA_CARGO_PATTERN = /\b(qa|quality|test|tester|teste)\b/i
 
 const isClosed = (item: WorkItemRow) => CLOSED_STATES.has(item.state)
-const isType = (item: WorkItemRow, type: string) => normalizeKey(item.workItemType) === normalizeKey(type)
+const isType = (item: WorkItemRow, type: string) =>
+  normalizeKey(item.workItemType) === normalizeKey(type)
 const sumPoints = (items: WorkItemRow[]) => items.reduce((sum, item) => sum + item.storyPoints, 0)
 
 export function isPointItem(item: WorkItemRow, pointTypes: string[]): boolean {
@@ -31,7 +36,11 @@ export function totalStoryPoints(items: WorkItemRow[], pointTypes: string[]): nu
 
 /** Soma do Effort nos mesmos tipos que somam Story Points (Tasks ficam de fora para não contar em dobro). */
 export function totalEffort(items: WorkItemRow[], pointTypes: string[]): number {
-  return round1(items.filter((item) => isPointItem(item, pointTypes)).reduce((sum, item) => sum + (item.effort ?? 0), 0))
+  return round1(
+    items
+      .filter((item) => isPointItem(item, pointTypes))
+      .reduce((sum, item) => sum + (item.effort ?? 0), 0),
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -55,7 +64,10 @@ function personPointsOf(name: string, email: string, items: WorkItemRow[]): Pers
   }
 }
 
-export function pointsByPerson(items: WorkItemRow[], pointTypes: string[]): { people: PersonPoints[]; unassigned: PersonPoints } {
+export function pointsByPerson(
+  items: WorkItemRow[],
+  pointTypes: string[],
+): { people: PersonPoints[]; unassigned: PersonPoints } {
   const byPerson = new Map<string, WorkItemRow[]>()
   const unassigned: WorkItemRow[] = []
   for (const item of items.filter((i) => isPointItem(i, pointTypes))) {
@@ -65,12 +77,15 @@ export function pointsByPerson(items: WorkItemRow[], pointTypes: string[]): { pe
   }
 
   const people = [...byPerson.values()]
-    .map((personItems) => personPointsOf(personItems[0].assignedTo, personItems[0].email, personItems))
+    .map((personItems) =>
+      personPointsOf(personItems[0].assignedTo, personItems[0].email, personItems),
+    )
     .sort((a, b) => b.storyPoints - a.storyPoints || a.name.localeCompare(b.name))
   return { people, unassigned: personPointsOf(UNASSIGNED_LABEL, '', unassigned) }
 }
 
-const hasAssignee = (item: WorkItemRow) => Boolean(normalizeKey(item.email) || item.assignedTo.trim())
+const hasAssignee = (item: WorkItemRow) =>
+  Boolean(normalizeKey(item.email) || item.assignedTo.trim())
 
 /** Itens sem responsável por tipo: os que somam pontos (User Story, Bug, Enabler…) e também as Tasks. */
 export function unassignedByType(items: WorkItemRow[], pointTypes: string[]): GroupPoints[] {
@@ -109,7 +124,12 @@ function closedPointsByDay(items: WorkItemRow[], workingDays: string[]): number[
   return perDay
 }
 
-export function burnup(items: WorkItemRow[], pointTypes: string[], workingDays: string[], today = new Date()): BurnupPoint[] {
+export function burnup(
+  items: WorkItemRow[],
+  pointTypes: string[],
+  workingDays: string[],
+  today = new Date(),
+): BurnupPoint[] {
   const pointItems = items.filter((item) => isPointItem(item, pointTypes))
   const scope = round1(sumPoints(pointItems))
   const todayKey = toDateKey(today.toISOString())
@@ -137,7 +157,11 @@ export interface GroupPoints {
   count: number
 }
 
-function groupPoints(items: WorkItemRow[], getKey: (item: WorkItemRow) => string, order: string[]): GroupPoints[] {
+function groupPoints(
+  items: WorkItemRow[],
+  getKey: (item: WorkItemRow) => string,
+  order: string[],
+): GroupPoints[] {
   const groups = new Map<string, WorkItemRow[]>()
   for (const item of items) {
     const key = getKey(item) || '(vazio)'
@@ -149,7 +173,11 @@ function groupPoints(items: WorkItemRow[], getKey: (item: WorkItemRow) => string
     return index >= 0 ? index : order.length
   }
   return [...groups.entries()]
-    .map(([key, groupItems]) => ({ key, storyPoints: round1(sumPoints(groupItems)), count: groupItems.length }))
+    .map(([key, groupItems]) => ({
+      key,
+      storyPoints: round1(sumPoints(groupItems)),
+      count: groupItems.length,
+    }))
     .sort((a, b) => rank(a.key) - rank(b.key) || a.key.localeCompare(b.key))
 }
 
@@ -261,40 +289,68 @@ export function isQaPerson(person: Person | undefined, cargos: CargoConfig[]): b
 }
 
 /** Pessoas alocadas (ferramenta de Alocação) na squad/sprint local. */
-function allocatedPeople(input: Pick<AllocationComparisonInput, 'people' | 'allocations' | 'squadId' | 'sprint'>): Person[] {
+function allocatedPeople(
+  input: Pick<AllocationComparisonInput, 'people' | 'allocations' | 'squadId' | 'sprint'>,
+): Person[] {
   if (!input.squadId || !input.sprint) return []
   const personIds = new Set(
-    input.allocations.filter((a) => a.squadId === input.squadId && a.sprintId === input.sprint?.id).map((a) => a.personId),
+    input.allocations
+      .filter((a) => a.squadId === input.squadId && a.sprintId === input.sprint?.id)
+      .map((a) => a.personId),
   )
   return input.people.filter((p) => personIds.has(p.id))
 }
 
 /** Membros do team + quem tem SP na sprint ou está alocado na squad/sprint sem ser membro. */
-function collectParticipants(members: AzureTeamMember[], personPoints: PersonPoints[], allocated: Person[]): Participant[] {
+function collectParticipants(
+  members: AzureTeamMember[],
+  personPoints: PersonPoints[],
+  allocated: Person[],
+): Participant[] {
   const byEmail = new Map<string, Participant>()
   for (const { identity } of members) {
-    byEmail.set(normalizeKey(identity.uniqueName), { name: identity.displayName, email: identity.uniqueName, isMember: true })
+    byEmail.set(normalizeKey(identity.uniqueName), {
+      name: identity.displayName,
+      email: identity.uniqueName,
+      isMember: true,
+    })
   }
   for (const p of personPoints) {
     const key = normalizeKey(p.email)
-    if (key && !byEmail.has(key)) byEmail.set(key, { name: p.name, email: p.email, isMember: false })
+    if (key && !byEmail.has(key))
+      byEmail.set(key, { name: p.name, email: p.email, isMember: false })
   }
   for (const person of allocated) {
     const key = normalizeKey(person.email)
-    if (key && !byEmail.has(key)) byEmail.set(key, { name: person.nome, email: person.email, isMember: false })
+    if (key && !byEmail.has(key))
+      byEmail.set(key, { name: person.nome, email: person.email, isMember: false })
   }
   return [...byEmail.values()]
 }
 
 /** Pessoa (por email) → alocação na squad/sprint → capacity/max pelo nível. */
-function resolveCapacity(participant: Participant, input: AllocationComparisonInput): ResolvedParticipant {
+function resolveCapacity(
+  participant: Participant,
+  input: AllocationComparisonInput,
+): ResolvedParticipant {
   const key = normalizeKey(participant.email)
   const person = input.people.find((p) => normalizeKey(p.email) === key)
   const matches = person
-    ? input.allocations.filter((a) => a.personId === person.id && a.squadId === input.squadId && a.sprintId === input.sprint?.id)
+    ? input.allocations.filter(
+        (a) =>
+          a.personId === person.id &&
+          a.squadId === input.squadId &&
+          a.sprintId === input.sprint?.id,
+      )
     : []
-  const allocation = matches.length > 0 ? { percentage: matches.reduce((sum, a) => sum + a.percentage, 0) } : undefined
-  const points = allocation && input.sprint ? pointsForEntry(allocation, input.sprint, person, input.levels) : { capacity: 0, max: 0 }
+  const allocation =
+    matches.length > 0
+      ? { percentage: matches.reduce((sum, a) => sum + a.percentage, 0) }
+      : undefined
+  const points =
+    allocation && input.sprint
+      ? pointsForEntry(allocation, input.sprint, person, input.levels)
+      : { capacity: 0, max: 0 }
   const assigned = input.personPoints.find((p) => normalizeKey(p.email) === key)
   return {
     ...participant,
@@ -326,7 +382,11 @@ function qaShare(row: ResolvedParticipant, qaRows: ResolvedParticipant[]): numbe
 }
 
 /** Faixa esperada de cada QA: qaMin%–qaMax% do total, dividida entre os QAs proporcionalmente ao Capacity (ver qaShare). */
-function qaRangeFor(row: ResolvedParticipant, qaRows: ResolvedParticipant[], input: AllocationComparisonInput) {
+function qaRangeFor(
+  row: ResolvedParticipant,
+  qaRows: ResolvedParticipant[],
+  input: AllocationComparisonInput,
+) {
   const share = qaShare(row, qaRows)
   return {
     expectedMin: round1(((input.totalPoints * input.qaMinPercent) / 100) * share),
@@ -338,21 +398,40 @@ function qaRangeFor(row: ResolvedParticipant, qaRows: ResolvedParticipant[], inp
  * Status do QA: a Faixa QA precisa caber em capacity–max. Passar do max tem prioridade
  * (inclusive quando a faixa passa dos dois lados); começar abaixo do capacity é "abaixo".
  */
-export function classifyQaRange(expectedMin: number, expectedMax: number, capacity: number, max: number): AllocationStatus {
+export function classifyQaRange(
+  expectedMin: number,
+  expectedMax: number,
+  capacity: number,
+  max: number,
+): AllocationStatus {
   if (expectedMax > max) return 'acima'
   if (expectedMin < capacity) return 'abaixo'
   return 'dentro'
 }
 
-function applyReference(row: ResolvedParticipant, qaRows: ResolvedParticipant[], input: AllocationComparisonInput): AllocationComparisonRow {
+function applyReference(
+  row: ResolvedParticipant,
+  qaRows: ResolvedParticipant[],
+  input: AllocationComparisonInput,
+): AllocationComparisonRow {
   if (!row.person) return { ...row, expectedMin: null, expectedMax: null, status: 'sem-cadastro' }
   if (row.isQa) {
     const range = qaRangeFor(row, qaRows, input)
     if (row.percentage === null) return { ...row, ...range, status: 'sem-alocacao' }
-    return { ...row, ...range, status: classifyQaRange(range.expectedMin, range.expectedMax, row.capacity, row.max) }
+    return {
+      ...row,
+      ...range,
+      status: classifyQaRange(range.expectedMin, range.expectedMax, row.capacity, row.max),
+    }
   }
-  if (row.percentage === null) return { ...row, expectedMin: null, expectedMax: null, status: 'sem-alocacao' }
-  return { ...row, expectedMin: null, expectedMax: null, status: classifyStatus(row.assigned, row.capacity, row.max) }
+  if (row.percentage === null)
+    return { ...row, expectedMin: null, expectedMax: null, status: 'sem-alocacao' }
+  return {
+    ...row,
+    expectedMin: null,
+    expectedMax: null,
+    status: classifyStatus(row.assigned, row.capacity, row.max),
+  }
 }
 
 /**
@@ -361,7 +440,9 @@ function applyReference(row: ResolvedParticipant, qaRows: ResolvedParticipant[],
  * entre os QAs proporcionalmente ao capacity) × o capacity/max dele (ver classifyQaRange).
  */
 export function allocationComparison(input: AllocationComparisonInput): AllocationComparisonRow[] {
-  const rows = collectParticipants(input.members, input.personPoints, allocatedPeople(input)).map((p) => resolveCapacity(p, input))
+  const rows = collectParticipants(input.members, input.personPoints, allocatedPeople(input)).map(
+    (p) => resolveCapacity(p, input),
+  )
   const qaRows = rows.filter((row) => row.isQa)
   return rows
     .map((row) => applyReference(row, qaRows, input))
@@ -395,10 +476,16 @@ export interface SprintAllocationSummary {
   missingLevel: number
 }
 
-type SprintAllocationInput = Pick<AllocationComparisonInput, 'people' | 'allocations' | 'levels' | 'squadId' | 'sprint'>
+type SprintAllocationInput = Pick<
+  AllocationComparisonInput,
+  'people' | 'allocations' | 'levels' | 'squadId' | 'sprint'
+>
 
 /** Pessoas alocadas (ferramenta de Alocação) na squad/sprint local, com capacity/max e os SP delas na sprint. */
-export function sprintAllocation(input: SprintAllocationInput, personPoints: PersonPoints[]): SprintAllocationSummary {
+export function sprintAllocation(
+  input: SprintAllocationInput,
+  personPoints: PersonPoints[],
+): SprintAllocationSummary {
   const { sprint, squadId } = input
   if (!sprint || !squadId) return { entries: [], capacity: 0, max: 0, missingLevel: 0 }
 
@@ -415,7 +502,9 @@ export function sprintAllocation(input: SprintAllocationInput, personPoints: Per
       const person = input.people.find((p) => p.id === personId)
       const points = pointsForEntry({ percentage }, sprint, person, input.levels)
       const email = person?.email.trim() ?? ''
-      const assigned = email ? personPoints.find((p) => normalizeKey(p.email) === normalizeKey(email)) : undefined
+      const assigned = email
+        ? personPoints.find((p) => normalizeKey(p.email) === normalizeKey(email))
+        : undefined
       return {
         personId,
         name: person?.nome ?? '(pessoa não cadastrada)',
@@ -461,7 +550,10 @@ export interface SprintMetrics {
   testRuns: TestRunsSummary | null
 }
 
-export interface SprintMetricsInput extends Omit<AllocationComparisonInput, 'personPoints' | 'totalPoints'> {
+export interface SprintMetricsInput extends Omit<
+  AllocationComparisonInput,
+  'personPoints' | 'totalPoints'
+> {
   items: WorkItemRow[]
   pointTypes: string[]
   workingDays: string[]
@@ -484,7 +576,9 @@ export function computeSprintMetrics({
   return {
     totalPoints,
     totalEffort: totalEffort(items, pointTypes),
-    deliveredPoints: round1(people.reduce((sum, p) => sum + p.deliveredPoints, unassigned.deliveredPoints)),
+    deliveredPoints: round1(
+      people.reduce((sum, p) => sum + p.deliveredPoints, unassigned.deliveredPoints),
+    ),
     byPerson: people,
     unassigned,
     unassignedByType: unassignedByType(items, pointTypes),

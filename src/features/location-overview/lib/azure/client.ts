@@ -25,7 +25,10 @@ const STATUS_MESSAGES: Record<number, string> = {
 }
 
 function errorFor(status: number, detail = ''): AzureApiError {
-  return new AzureApiError(status, STATUS_MESSAGES[status] ?? (detail || `Erro ${status} ao chamar o Azure DevOps.`))
+  return new AzureApiError(
+    status,
+    STATUS_MESSAGES[status] ?? (detail || `Erro ${status} ao chamar o Azure DevOps.`),
+  )
 }
 
 export function isAbortError(error: unknown): boolean {
@@ -47,7 +50,9 @@ interface AzureResponse<T> {
 }
 
 function buildUrl(config: AzureConfig, path: string, query: AzureFetchOptions['query']): string {
-  const url = new URL(`https://dev.azure.com/${encodeURIComponent(config.organization.trim())}/${path.replace(/^\//, '')}`)
+  const url = new URL(
+    `https://dev.azure.com/${encodeURIComponent(config.organization.trim())}/${path.replace(/^\//, '')}`,
+  )
   for (const [key, value] of Object.entries(query ?? {})) {
     if (value !== undefined && value !== '') url.searchParams.set(key, String(value))
   }
@@ -74,10 +79,15 @@ async function readErrorDetail(response: Response): Promise<string> {
 
 // Um PAT inválido às vezes recebe 203 + página HTML de login em vez de 401.
 function assertJsonResponse(response: Response): void {
-  if (!(response.headers.get('content-type') ?? '').includes('application/json')) throw errorFor(401)
+  if (!(response.headers.get('content-type') ?? '').includes('application/json'))
+    throw errorFor(401)
 }
 
-async function send(config: AzureConfig, path: string, options: AzureFetchOptions): Promise<Response> {
+async function send(
+  config: AzureConfig,
+  path: string,
+  options: AzureFetchOptions,
+): Promise<Response> {
   const hasBody = options.body !== undefined
   try {
     return await fetch(buildUrl(config, path, options.query), {
@@ -92,7 +102,11 @@ async function send(config: AzureConfig, path: string, options: AzureFetchOption
   }
 }
 
-async function request<T>(config: AzureConfig, path: string, options: AzureFetchOptions = {}): Promise<AzureResponse<T>> {
+async function request<T>(
+  config: AzureConfig,
+  path: string,
+  options: AzureFetchOptions = {},
+): Promise<AzureResponse<T>> {
   const response = await send(config, path, options)
   if (!response.ok) throw errorFor(response.status, await readErrorDetail(response))
   assertJsonResponse(response)
@@ -103,12 +117,20 @@ async function request<T>(config: AzureConfig, path: string, options: AzureFetch
 }
 
 /** Chamada única a https://dev.azure.com/{org}/{path}. */
-export async function azureFetch<T>(config: AzureConfig, path: string, options?: AzureFetchOptions): Promise<T> {
+export async function azureFetch<T>(
+  config: AzureConfig,
+  path: string,
+  options?: AzureFetchOptions,
+): Promise<T> {
   return (await request<T>(config, path, options)).data
 }
 
 /** Segue `x-ms-continuationtoken` até o fim, concatenando o `value` de cada página. */
-export async function azureFetchAll<T>(config: AzureConfig, path: string, options: AzureFetchOptions = {}): Promise<T[]> {
+export async function azureFetchAll<T>(
+  config: AzureConfig,
+  path: string,
+  options: AzureFetchOptions = {},
+): Promise<T[]> {
   const items: T[] = []
   let continuationToken: string | null = null
   do {

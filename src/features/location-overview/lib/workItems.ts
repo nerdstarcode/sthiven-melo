@@ -105,7 +105,11 @@ export function buildWorkItemRow(raw: Record<string, unknown>): WorkItemRow {
   const state = String(raw.state ?? '').trim()
 
   const pontoExecucao =
-    raw.pontoExecucao !== undefined ? toNumber(raw.pontoExecucao) : workItemType === 'Test Case' ? 1 : 0
+    raw.pontoExecucao !== undefined
+      ? toNumber(raw.pontoExecucao)
+      : workItemType === 'Test Case'
+        ? 1
+        : 0
   const runs = raw.runs !== undefined ? toNumber(raw.runs) : CLOSED_STATES.has(state) ? 2 : 0
 
   return {

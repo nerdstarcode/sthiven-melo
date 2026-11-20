@@ -31,11 +31,22 @@ function isWithin(key: string, ranges: DateRange[]): boolean {
 }
 
 /** Dias úteis (seg–sex) entre as duas datas, inclusive, excluindo `daysOff`, como "yyyy-mm-dd". */
-export function workingDaysBetween(startDate: string, endDate: string, daysOff: DateRange[] = []): string[] {
-  const offRanges = daysOff.map((range) => ({ start: toDateKey(range.start), end: toDateKey(range.end) }))
+export function workingDaysBetween(
+  startDate: string,
+  endDate: string,
+  daysOff: DateRange[] = [],
+): string[] {
+  const offRanges = daysOff.map((range) => ({
+    start: toDateKey(range.start),
+    end: toDateKey(range.end),
+  }))
   const end = new Date(`${toDateKey(endDate)}T00:00:00Z`)
   const days: string[] = []
-  for (let day = new Date(`${toDateKey(startDate)}T00:00:00Z`); day <= end; day.setUTCDate(day.getUTCDate() + 1)) {
+  for (
+    let day = new Date(`${toDateKey(startDate)}T00:00:00Z`);
+    day <= end;
+    day.setUTCDate(day.getUTCDate() + 1)
+  ) {
     const key = toDateKey(day.toISOString())
     if (!isWeekend(day) && !isWithin(key, offRanges)) days.push(key)
   }

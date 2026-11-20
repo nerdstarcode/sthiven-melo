@@ -67,14 +67,18 @@ export function deleteSkill(id: string): Skill[] {
 /** Define (ou atualiza) a proficiência da pessoa na skill. */
 export function setPersonSkill(personId: string, skillId: string, level: number): PersonSkill[] {
   const entry: PersonSkill = { personId, skillId, level: clampProficiency(level) }
-  const others = loadPersonSkills().filter((ps) => !(ps.personId === personId && ps.skillId === skillId))
+  const others = loadPersonSkills().filter(
+    (ps) => !(ps.personId === personId && ps.skillId === skillId),
+  )
   const next = [...others, entry]
   savePersonSkills(next)
   return next
 }
 
 export function removePersonSkill(personId: string, skillId: string): PersonSkill[] {
-  const next = loadPersonSkills().filter((ps) => !(ps.personId === personId && ps.skillId === skillId))
+  const next = loadPersonSkills().filter(
+    (ps) => !(ps.personId === personId && ps.skillId === skillId),
+  )
   savePersonSkills(next)
   return next
 }

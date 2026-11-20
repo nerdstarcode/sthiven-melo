@@ -65,7 +65,9 @@ export function setSquadMembers(squadId: string, personIds: string[]): Person[] 
     if (isMember === hasSquad) return person
     return {
       ...person,
-      squadIds: isMember ? [...person.squadIds, squadId] : person.squadIds.filter((id) => id !== squadId),
+      squadIds: isMember
+        ? [...person.squadIds, squadId]
+        : person.squadIds.filter((id) => id !== squadId),
     }
   })
   savePeople(next)

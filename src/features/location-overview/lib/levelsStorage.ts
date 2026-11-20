@@ -39,10 +39,15 @@ export function saveLevels(levels: LevelConfig[]): void {
 }
 
 /** Índice nivel (ex.: "SR") -> capacity/max points/day, para uso na importação/derivação. */
-export function levelsToPointsMap(levels: LevelConfig[]): Record<string, { capacity: number; max: number }> {
+export function levelsToPointsMap(
+  levels: LevelConfig[],
+): Record<string, { capacity: number; max: number }> {
   const map: Record<string, { capacity: number; max: number }> = {}
   for (const level of levels) {
-    map[level.nivel.trim().toUpperCase()] = { capacity: level.capacityPointsDay, max: level.maxPointsDay }
+    map[level.nivel.trim().toUpperCase()] = {
+      capacity: level.capacityPointsDay,
+      max: level.maxPointsDay,
+    }
   }
   return map
 }

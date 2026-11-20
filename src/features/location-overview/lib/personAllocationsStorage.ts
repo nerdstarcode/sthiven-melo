@@ -26,7 +26,10 @@ export function savePersonAllocations(allocations: PersonAllocation[]): void {
 export function upsertPersonAllocation(allocation: PersonAllocation): PersonAllocation[] {
   const allocations = loadPersonAllocations()
   const index = allocations.findIndex((a) => a.id === allocation.id)
-  const next = index >= 0 ? allocations.map((a, i) => (i === index ? allocation : a)) : [...allocations, allocation]
+  const next =
+    index >= 0
+      ? allocations.map((a, i) => (i === index ? allocation : a))
+      : [...allocations, allocation]
   savePersonAllocations(next)
   return next
 }
@@ -68,7 +71,10 @@ export function pointsForEntry(
 }
 
 /** Nível cadastrado da pessoa, sem diferenciar maiúsculas nem espaços (ex.: "sr " → "SR"). */
-export function findLevelFor(person: Pick<Person, 'nivel'> | undefined, levels: LevelConfig[]): LevelConfig | undefined {
+export function findLevelFor(
+  person: Pick<Person, 'nivel'> | undefined,
+  levels: LevelConfig[],
+): LevelConfig | undefined {
   const key = person?.nivel.trim().toLowerCase()
   return key ? levels.find((l) => l.nivel.trim().toLowerCase() === key) : undefined
 }
@@ -86,7 +92,11 @@ export function moveAllocationsToSquad(
   const moving = allocations.filter((a) => idSet.has(a.id))
   const conflicts = moving.filter((entry) =>
     allocations.some(
-      (a) => !idSet.has(a.id) && a.squadId === squadId && a.sprintId === entry.sprintId && a.personId === entry.personId,
+      (a) =>
+        !idSet.has(a.id) &&
+        a.squadId === squadId &&
+        a.sprintId === entry.sprintId &&
+        a.personId === entry.personId,
     ),
   )
   if (conflicts.length > 0) return { allocations, conflicts }

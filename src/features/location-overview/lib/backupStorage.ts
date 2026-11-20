@@ -56,7 +56,8 @@ export function exportAllData(): AppBackup {
  * no arquivo (arrays), ignorando o resto, para tolerar backups parciais/antigos.
  */
 export function importAllData(data: unknown): void {
-  if (!data || typeof data !== 'object') throw new Error('Arquivo inválido: esperado um objeto JSON.')
+  if (!data || typeof data !== 'object')
+    throw new Error('Arquivo inválido: esperado um objeto JSON.')
   const backup = data as Partial<AppBackup>
 
   if (Array.isArray(backup.workItems)) saveWorkItems(backup.workItems)

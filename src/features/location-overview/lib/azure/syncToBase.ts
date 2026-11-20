@@ -19,11 +19,16 @@ export function findSquadByName(squads: Squad[], name: string): Squad | undefine
   return squads.find((squad) => squadMatchesName(squad, name))
 }
 
-export function findSprintForIteration(sprints: Sprint[], iteration: AzureIteration): Sprint | undefined {
+export function findSprintForIteration(
+  sprints: Sprint[],
+  iteration: AzureIteration,
+): Sprint | undefined {
   const info = iterationSprintInfo(iteration)
   if (!info) return undefined
   return sprints.find(
-    (sprint) => sprint.number === info.number && normalizeKey(sprint.fiscalYear) === normalizeKey(info.fiscalYear),
+    (sprint) =>
+      sprint.number === info.number &&
+      normalizeKey(sprint.fiscalYear) === normalizeKey(info.fiscalYear),
   )
 }
 
@@ -37,19 +42,31 @@ export function upsertSquadByName(name: string): { squad: Squad; created: boolea
 }
 
 function newPersonFromMember({ identity }: AzureTeamMember, squadId: string): Person {
-  return { id: createId(), nome: identity.displayName.trim(), email: identity.uniqueName.trim(), cargo: '', nivel: '', squadIds: [squadId] }
+  return {
+    id: createId(),
+    nome: identity.displayName.trim(),
+    email: identity.uniqueName.trim(),
+    cargo: '',
+    nivel: '',
+    squadIds: [squadId],
+  }
 }
 
 /**
  * Membros do Team → Pessoas, casando por email. Pessoas existentes só ganham o vínculo
  * com a squad (cargo/nível não mudam); as novas entram sem cargo/nível para completar depois.
  */
-export function upsertPeopleFromTeam(squadId: string, members: AzureTeamMember[]): { created: number; linked: number } {
+export function upsertPeopleFromTeam(
+  squadId: string,
+  members: AzureTeamMember[],
+): { created: number; linked: number } {
   const people = loadPeople()
   let created = 0
   let linked = 0
   for (const member of members) {
-    const index = people.findIndex((p) => normalizeKey(p.email) === normalizeKey(member.identity.uniqueName))
+    const index = people.findIndex(
+      (p) => normalizeKey(p.email) === normalizeKey(member.identity.uniqueName),
+    )
     if (index < 0) {
       people.push(newPersonFromMember(member, squadId))
       created += 1
@@ -68,7 +85,9 @@ export function upsertPeopleFromTeam(squadId: string, members: AzureTeamMember[]
  * à mão (Sprints ou Análise da Sprint) — o calendário do Azure não o sobrescreve.
  * null quando o nome da iteration não segue "Sprint N - FYxx-yy" ou ela não tem datas.
  */
-export function upsertSprintFromIteration(iteration: AzureIteration): { sprint: Sprint; created: boolean } | null {
+export function upsertSprintFromIteration(
+  iteration: AzureIteration,
+): { sprint: Sprint; created: boolean } | null {
   const info = iterationSprintInfo(iteration)
   const { startDate, finishDate } = iteration.attributes
   if (!info || !startDate || !finishDate) return null
@@ -93,7 +112,11 @@ export function upsertWorkItems(rows: WorkItemRow[]): number {
 }
 
 /** Relatório de Testes da squad/sprint a partir dos runs, preservando o pointsRatio já ajustado. */
-export function upsertTestReportFromRuns(squadId: string, sprintId: string, summary: TestRunsSummary): void {
+export function upsertTestReportFromRuns(
+  squadId: string,
+  sprintId: string,
+  summary: TestRunsSummary,
+): void {
   const existing = loadTestReports().find((r) => r.squadId === squadId && r.sprintId === sprintId)
   upsertTestReport({
     id: existing?.id ?? createId(),
@@ -120,8 +143,15 @@ export interface TeamSyncResult {
 export function syncTeamToBase(input: TeamSyncInput): TeamSyncResult {
   const { squad, created } = upsertSquadByName(input.teamName)
   const people = upsertPeopleFromTeam(squad.id, input.members)
-  const sprintsSynced = input.iterations.filter((iteration) => upsertSprintFromIteration(iteration) !== null).length
-  return { squadCreated: created, peopleCreated: people.created, peopleLinked: people.linked, sprintsSynced }
+  const sprintsSynced = input.iterations.filter(
+    (iteration) => upsertSprintFromIteration(iteration) !== null,
+  ).length
+  return {
+    squadCreated: created,
+    peopleCreated: people.created,
+    peopleLinked: people.linked,
+    sprintsSynced,
+  }
 }
 
 export interface SprintSyncInput {
@@ -142,7 +172,11 @@ export interface SprintSyncResult {
   testReport: boolean
 }
 
-function syncTestReport(squadId: string, sprint: Sprint | undefined, testRuns: TestRunsSummary | null): boolean {
+function syncTestReport(
+  squadId: string,
+  sprint: Sprint | undefined,
+  testRuns: TestRunsSummary | null,
+): boolean {
   if (!sprint || !testRuns || testRuns.runCount === 0) return false
   upsertTestReportFromRuns(squadId, sprint.id, testRuns)
   return true

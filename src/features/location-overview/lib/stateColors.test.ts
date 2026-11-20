@@ -23,7 +23,9 @@ describe('stateColors', () => {
   })
 
   it('ordena pelo fluxo e deixa desconhecidos no fim', () => {
-    expect(['Closed', 'Xpto', 'MR Prod', 'New'].sort((a, b) => stateRank(a) - stateRank(b))).toEqual(['New', 'MR Prod', 'Closed', 'Xpto'])
+    expect(
+      ['Closed', 'Xpto', 'MR Prod', 'New'].sort((a, b) => stateRank(a) - stateRank(b)),
+    ).toEqual(['New', 'MR Prod', 'Closed', 'Xpto'])
     expect(stateColors(['Removed'], PALETTE, DEFAULT)).toHaveLength(1)
   })
 })

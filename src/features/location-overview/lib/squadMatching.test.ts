@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { findSquadNameForIterationPath, resolveSquadName, squadMatchesIterationPath } from './squadMatching'
+import {
+  findSquadNameForIterationPath,
+  resolveSquadName,
+  squadMatchesIterationPath,
+} from './squadMatching'
 import type { Squad } from './squadsStorage'
 
 const RENEWALS: Squad = { id: 'sq1', name: 'Renewals', aliases: ['Renewals Team'] }
@@ -13,7 +17,9 @@ describe('squadMatching', () => {
   })
 
   it('devolve sempre o nome principal', () => {
-    expect(findSquadNameForIterationPath([PORTAL, RENEWALS], 'Renewals Team/Sprint 08')).toBe('Renewals')
+    expect(findSquadNameForIterationPath([PORTAL, RENEWALS], 'Renewals Team/Sprint 08')).toBe(
+      'Renewals',
+    )
     expect(resolveSquadName([PORTAL, RENEWALS], ' renewals team ')).toBe('Renewals')
     expect(resolveSquadName([PORTAL, RENEWALS], 'Outra')).toBe('Outra')
   })

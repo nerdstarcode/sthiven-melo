@@ -123,24 +123,102 @@ export const demoSprints: Sprint[] = [
 export const demoAllocations: PersonAllocation[] = [
   // Sthiven divide o tempo entre Web e Plataforma
   ...demoSprints.flatMap((sp) => [
-    { id: `al-sthiven-web-${sp.id}`, personId: OWNER_PERSON_ID, squadId: 'sq-web', sprintId: sp.id, percentage: 50 },
-    { id: `al-sthiven-plat-${sp.id}`, personId: OWNER_PERSON_ID, squadId: 'sq-platform', sprintId: sp.id, percentage: 50 },
-    { id: `al-ana-${sp.id}`, personId: 'demo-ana', squadId: 'sq-web', sprintId: sp.id, percentage: 100 },
-    { id: `al-bruno-${sp.id}`, personId: 'demo-bruno', squadId: 'sq-platform', sprintId: sp.id, percentage: 100 },
-    { id: `al-carla-${sp.id}`, personId: 'demo-carla', squadId: 'sq-data', sprintId: sp.id, percentage: 80 },
+    {
+      id: `al-sthiven-web-${sp.id}`,
+      personId: OWNER_PERSON_ID,
+      squadId: 'sq-web',
+      sprintId: sp.id,
+      percentage: 50,
+    },
+    {
+      id: `al-sthiven-plat-${sp.id}`,
+      personId: OWNER_PERSON_ID,
+      squadId: 'sq-platform',
+      sprintId: sp.id,
+      percentage: 50,
+    },
+    {
+      id: `al-ana-${sp.id}`,
+      personId: 'demo-ana',
+      squadId: 'sq-web',
+      sprintId: sp.id,
+      percentage: 100,
+    },
+    {
+      id: `al-bruno-${sp.id}`,
+      personId: 'demo-bruno',
+      squadId: 'sq-platform',
+      sprintId: sp.id,
+      percentage: 100,
+    },
+    {
+      id: `al-carla-${sp.id}`,
+      personId: 'demo-carla',
+      squadId: 'sq-data',
+      sprintId: sp.id,
+      percentage: 80,
+    },
   ]),
   // Diego (QA) entra no Web só a partir da sprint 11
-  { id: 'al-diego-web-sp-11', personId: 'demo-diego', squadId: 'sq-web', sprintId: 'sp-11', percentage: 100 },
-  { id: 'al-diego-web-sp-12', personId: 'demo-diego', squadId: 'sq-web', sprintId: 'sp-12', percentage: 60 },
-  { id: 'al-diego-data-sp-12', personId: 'demo-diego', squadId: 'sq-data', sprintId: 'sp-12', percentage: 40 },
+  {
+    id: 'al-diego-web-sp-11',
+    personId: 'demo-diego',
+    squadId: 'sq-web',
+    sprintId: 'sp-11',
+    percentage: 100,
+  },
+  {
+    id: 'al-diego-web-sp-12',
+    personId: 'demo-diego',
+    squadId: 'sq-web',
+    sprintId: 'sp-12',
+    percentage: 60,
+  },
+  {
+    id: 'al-diego-data-sp-12',
+    personId: 'demo-diego',
+    squadId: 'sq-data',
+    sprintId: 'sp-12',
+    percentage: 40,
+  },
 ]
 
 const basePeople: Omit<Person, 'squadIds'>[] = [
-  { id: OWNER_PERSON_ID, nome: 'Sthiven Melo', email: '', cargo: 'Software Developer', nivel: 'PL' },
-  { id: 'demo-ana', nome: 'Ana (exemplo)', email: 'ana@exemplo.dev', cargo: 'Sr Software Developer', nivel: 'SR' },
-  { id: 'demo-bruno', nome: 'Bruno (exemplo)', email: 'bruno@exemplo.dev', cargo: 'Associate Software Developer', nivel: 'JR' },
-  { id: 'demo-carla', nome: 'Carla (exemplo)', email: 'carla@exemplo.dev', cargo: 'Data Analyst', nivel: 'JR' },
-  { id: 'demo-diego', nome: 'Diego (exemplo)', email: 'diego@exemplo.dev', cargo: 'Software Tester Quality', nivel: 'PL' },
+  {
+    id: OWNER_PERSON_ID,
+    nome: 'Sthiven Melo',
+    email: '',
+    cargo: 'Software Developer',
+    nivel: 'PL',
+  },
+  {
+    id: 'demo-ana',
+    nome: 'Ana (exemplo)',
+    email: 'ana@exemplo.dev',
+    cargo: 'Sr Software Developer',
+    nivel: 'SR',
+  },
+  {
+    id: 'demo-bruno',
+    nome: 'Bruno (exemplo)',
+    email: 'bruno@exemplo.dev',
+    cargo: 'Associate Software Developer',
+    nivel: 'JR',
+  },
+  {
+    id: 'demo-carla',
+    nome: 'Carla (exemplo)',
+    email: 'carla@exemplo.dev',
+    cargo: 'Data Analyst',
+    nivel: 'JR',
+  },
+  {
+    id: 'demo-diego',
+    nome: 'Diego (exemplo)',
+    email: 'diego@exemplo.dev',
+    cargo: 'Software Tester Quality',
+    nivel: 'PL',
+  },
 ]
 
 export const demoPeople: Person[] = basePeople.map((p) => ({

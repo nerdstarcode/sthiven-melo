@@ -22,7 +22,10 @@ export function squadMatchesIterationPath(squad: Squad, iterationPath: string): 
 }
 
 /** Nome principal da squad cadastrada (squadsStorage) que bate com o Iteration Path, ou null se nenhuma bater. */
-export function findSquadNameForIterationPath(squads: Squad[], iterationPath: string): string | null {
+export function findSquadNameForIterationPath(
+  squads: Squad[],
+  iterationPath: string,
+): string | null {
   return squads.find((squad) => squadMatchesIterationPath(squad, iterationPath))?.name ?? null
 }
 

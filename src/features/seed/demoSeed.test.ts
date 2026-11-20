@@ -49,7 +49,9 @@ describe('demoSeed', () => {
     const allocations = loadPersonAllocations()
     for (const person of demoPeople) {
       for (const sprint of demoSprints) {
-        expect(sumPercentageForPersonInSprint(allocations, person.id, sprint.id)).toBeLessThanOrEqual(100)
+        expect(
+          sumPercentageForPersonInSprint(allocations, person.id, sprint.id),
+        ).toBeLessThanOrEqual(100)
       }
     }
   })

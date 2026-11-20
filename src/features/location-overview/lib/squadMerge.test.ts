@@ -6,7 +6,17 @@ import { loadSquads, saveSquads } from './squadsStorage'
 import { loadTestReports, saveTestReports, type TestReport } from './testReportsStorage'
 
 function report(id: string, squadId: string, sprintId: string): TestReport {
-  return { id, squadId, sprintId, testPoints: 0, runsPercent: 0, passedPercent: 0, failedPercent: 0, notRunCount: 0, pointsRatio: 3.5 }
+  return {
+    id,
+    squadId,
+    sprintId,
+    testPoints: 0,
+    runsPercent: 0,
+    passedPercent: 0,
+    failedPercent: 0,
+    notRunCount: 0,
+    pointsRatio: 3.5,
+  }
 }
 
 describe('mergeSquads', () => {
@@ -20,7 +30,11 @@ describe('mergeSquads', () => {
       { id: 'a2', personId: 'p1', squadId: 'dup', sprintId: 's1', percentage: 30 },
       { id: 'a3', personId: 'p2', squadId: 'dup', sprintId: 's1', percentage: 100 },
     ])
-    saveTestReports([report('r1', 'main', 's1'), report('r2', 'dup', 's1'), report('r3', 'dup', 's2')])
+    saveTestReports([
+      report('r1', 'main', 's1'),
+      report('r2', 'dup', 's1'),
+      report('r3', 'dup', 's2'),
+    ])
     savePeople([
       { id: 'p1', nome: 'Ada', email: '', cargo: '', nivel: '', squadIds: ['main', 'dup'] },
       { id: 'p2', nome: 'Bia', email: '', cargo: '', nivel: '', squadIds: ['dup'] },
@@ -32,7 +46,9 @@ describe('mergeSquads', () => {
       testReportsMoved: 1,
       testReportsDiscarded: 1,
     })
-    expect(loadSquads()).toEqual([{ id: 'main', name: 'Renewals', aliases: ['Renewals Team', 'RNW'] }])
+    expect(loadSquads()).toEqual([
+      { id: 'main', name: 'Renewals', aliases: ['Renewals Team', 'RNW'] },
+    ])
     expect(loadPersonAllocations().map((a) => [a.id, a.squadId])).toEqual([
       ['a1', 'main'],
       ['a3', 'main'],

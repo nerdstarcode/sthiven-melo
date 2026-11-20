@@ -33,7 +33,10 @@ function isPartialConfig(value: unknown): value is Partial<AzureConfig> {
 }
 
 export function loadAzureConfig(): AzureConfig {
-  return { ...DEFAULT_AZURE_CONFIG, ...readJson<Partial<AzureConfig>>(STORAGE_KEY, {}, isPartialConfig) }
+  return {
+    ...DEFAULT_AZURE_CONFIG,
+    ...readJson<Partial<AzureConfig>>(STORAGE_KEY, {}, isPartialConfig),
+  }
 }
 
 export function saveAzureConfig(config: AzureConfig): void {

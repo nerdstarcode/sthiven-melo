@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { DEFAULT_AZURE_CONFIG } from './azureConfigStorage'
-import { azureWorkItemToRow, iterationSprintInfo, summarizeTestRuns, testRunsToReportFields } from './mappers'
+import {
+  azureWorkItemToRow,
+  iterationSprintInfo,
+  summarizeTestRuns,
+  testRunsToReportFields,
+} from './mappers'
 import { FIXTURE_ITERATION, FIXTURE_TEST_RUNS } from './sprintFixtures'
 import type { AzureWorkItem } from './types'
 
@@ -50,17 +55,26 @@ describe('azureWorkItemToRow', () => {
     )
     expect(row).toMatchObject({ effort: 13, timeCriticality: 8, wsjf: 4.5 })
     expect(azureWorkItemToRow(workItem({ 'MyOrg.Wsjf': 2 }), DEFAULT_AZURE_CONFIG).wsjf).toBe(2)
-    expect(azureWorkItemToRow(workItem({}), DEFAULT_AZURE_CONFIG)).toMatchObject({ timeCriticality: 0, wsjf: 0 })
+    expect(azureWorkItemToRow(workItem({}), DEFAULT_AZURE_CONFIG)).toMatchObject({
+      timeCriticality: 0,
+      wsjf: 0,
+    })
   })
 
   it('usa o campo de SP configurado e cai para o padrão quando ele não existe', () => {
     const config = { ...DEFAULT_AZURE_CONFIG, storyPointsField: 'Custom.Points' }
     expect(azureWorkItemToRow(workItem({ 'Custom.Points': 8 }), config).storyPoints).toBe(8)
-    expect(azureWorkItemToRow(workItem({ 'Microsoft.VSTS.Scheduling.StoryPoints': 3 }), config).storyPoints).toBe(3)
+    expect(
+      azureWorkItemToRow(workItem({ 'Microsoft.VSTS.Scheduling.StoryPoints': 3 }), config)
+        .storyPoints,
+    ).toBe(3)
   })
 
   it('só preenche closedDate em itens fechados, com fallback para ResolvedDate', () => {
-    const closed = workItem({ 'System.State': 'Closed', 'Microsoft.VSTS.Common.ResolvedDate': '2025-09-03T10:00:00Z' })
+    const closed = workItem({
+      'System.State': 'Closed',
+      'Microsoft.VSTS.Common.ResolvedDate': '2025-09-03T10:00:00Z',
+    })
     expect(azureWorkItemToRow(closed, DEFAULT_AZURE_CONFIG).closedDate).toBe('2025-09-03T10:00:00Z')
     const active = workItem({ 'Microsoft.VSTS.Common.ClosedDate': '2025-09-03T10:00:00Z' })
     expect(azureWorkItemToRow(active, DEFAULT_AZURE_CONFIG).closedDate).toBeUndefined()
@@ -73,18 +87,31 @@ describe('iterationSprintInfo', () => {
   })
 
   it('usa o path quando o nome não segue o padrão', () => {
-    expect(iterationSprintInfo({ ...FIXTURE_ITERATION, name: 'Iteração 8' })).toEqual({ number: 8, fiscalYear: 'FY25-26' })
+    expect(iterationSprintInfo({ ...FIXTURE_ITERATION, name: 'Iteração 8' })).toEqual({
+      number: 8,
+      fiscalYear: 'FY25-26',
+    })
   })
 
   it('retorna null sem padrão reconhecível', () => {
-    expect(iterationSprintInfo({ ...FIXTURE_ITERATION, name: 'Backlog', path: 'Portal\\Backlog' })).toBeNull()
+    expect(
+      iterationSprintInfo({ ...FIXTURE_ITERATION, name: 'Backlog', path: 'Portal\\Backlog' }),
+    ).toBeNull()
   })
 })
 
 describe('test runs', () => {
   it('resume execuções e resultados', () => {
     const summary = summarizeTestRuns(FIXTURE_TEST_RUNS)
-    expect(summary).toMatchObject({ runCount: 3, automatedRuns: 2, manualRuns: 1, totalTests: 90, passed: 84, failed: 3, notRun: 2 })
+    expect(summary).toMatchObject({
+      runCount: 3,
+      automatedRuns: 2,
+      manualRuns: 1,
+      totalTests: 90,
+      passed: 84,
+      failed: 3,
+      notRun: 2,
+    })
     expect(summary.runsByDay).toEqual({ '2025-09-02': 2, '2025-09-09': 1 })
   })
 

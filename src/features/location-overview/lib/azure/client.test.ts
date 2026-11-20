@@ -4,7 +4,10 @@ import { azureFetch, azureFetchAll, AzureApiError, NETWORK_ERROR_STATUS } from '
 
 const config = { ...DEFAULT_AZURE_CONFIG, organization: 'minha-org', pat: 'abc' }
 
-function jsonResponse(body: unknown, init: { status?: number; headers?: Record<string, string> } = {}): Response {
+function jsonResponse(
+  body: unknown,
+  init: { status?: number; headers?: Record<string, string> } = {},
+): Response {
   return new Response(JSON.stringify(body), {
     status: init.status ?? 200,
     headers: { 'content-type': 'application/json; charset=utf-8', ...init.headers },
@@ -54,7 +57,9 @@ describe('azureFetch', () => {
   })
 
   it('trata 203 + HTML (PAT inválido) como 401', async () => {
-    mockFetch(new Response('<html>login</html>', { status: 203, headers: { 'content-type': 'text/html' } }))
+    mockFetch(
+      new Response('<html>login</html>', { status: 203, headers: { 'content-type': 'text/html' } }),
+    )
     await expectApiError(azureFetch(config, 'x'), 401)
   })
 

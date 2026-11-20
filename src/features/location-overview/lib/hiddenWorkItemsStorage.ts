@@ -16,7 +16,9 @@ export function saveHiddenWorkItems(ids: number[]): void {
 /** Oculta o work item se estiver visível, ou volta a mostrar se já estiver oculto. */
 export function toggleHiddenWorkItem(id: number): number[] {
   const current = loadHiddenWorkItems()
-  const next = current.includes(id) ? current.filter((hiddenId) => hiddenId !== id) : [...current, id]
+  const next = current.includes(id)
+    ? current.filter((hiddenId) => hiddenId !== id)
+    : [...current, id]
   saveHiddenWorkItems(next)
   return next
 }
@@ -24,5 +26,7 @@ export function toggleHiddenWorkItem(id: number): number[] {
 /** Remove os itens ocultos e as Tasks filhas deles (pelo parentId). */
 export function excludeHidden(items: WorkItemRow[], hidden: ReadonlySet<number>): WorkItemRow[] {
   if (hidden.size === 0) return items
-  return items.filter((item) => !hidden.has(item.id) && !(item.parentId !== undefined && hidden.has(item.parentId)))
+  return items.filter(
+    (item) => !hidden.has(item.id) && !(item.parentId !== undefined && hidden.has(item.parentId)),
+  )
 }
