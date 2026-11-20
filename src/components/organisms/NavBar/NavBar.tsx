@@ -50,10 +50,6 @@ export function NavBar() {
         />
       </div>
 
-      <div className='absolute top-4 left-1/2 hidden -translate-x-1/2 md:block'>
-        <Logo />
-      </div>
-
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} pathname={pathname} />
     </header>
   )
