@@ -10,5 +10,7 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     css: false,
+    // Testes de organismos digitam bastante (user-event) e o jsdom é lento no Windows.
+    testTimeout: 15000,
   },
 })

@@ -11,7 +11,7 @@ export default function Home() {
         <title>{t.metaTitle}</title>
         <meta name='description' content={t.metaDescription} />
       </Head>
-       <Hero />
+      <Hero />
     </>
   )
 }

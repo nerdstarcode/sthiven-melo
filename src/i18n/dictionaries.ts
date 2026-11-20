@@ -1,3 +1,4 @@
+import { apps } from './apps'
 import type { Localized } from './types'
 
 export const nav = {
@@ -233,6 +234,7 @@ export const notFound = {
 } satisfies Localized<Record<string, string>>
 
 export const dictionaries = {
+  apps,
   nav,
   home,
   tools,
