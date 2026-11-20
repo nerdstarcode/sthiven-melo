@@ -23,3 +23,4 @@ export function useLocalize() {
   const language = useCurrentLanguage()
   return <T>(value: Localized<T>): T => localize(value, language)
 }
+export { format } from './format'

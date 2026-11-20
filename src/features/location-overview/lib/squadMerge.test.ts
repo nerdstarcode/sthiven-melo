@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { loadPeople, savePeople } from './peopleStorage'
 import { loadPersonAllocations, savePersonAllocations } from './personAllocationsStorage'
-import { mergeSquads } from './squadMerge'
+import { mergeRequiredSkills, mergeSquads } from './squadMerge'
 import { loadSquads, saveSquads } from './squadsStorage'
 import { loadTestReports, saveTestReports, type TestReport } from './testReportsStorage'
 
@@ -58,5 +58,37 @@ describe('mergeSquads', () => {
       ['r3', 'main'],
     ])
     expect(loadPeople().map((p) => p.squadIds)).toEqual([['main'], ['main']])
+  })
+})
+
+describe('mergeRequiredSkills', () => {
+  it('une as skills e mantém o maior nível mínimo', () => {
+    expect(
+      mergeRequiredSkills(
+        [
+          { skillId: 'react', minLevel: 3 },
+          { skillId: 'ts', minLevel: 4 },
+        ],
+        [
+          { skillId: 'react', minLevel: 5 },
+          { skillId: 'docker', minLevel: 2 },
+        ],
+      ),
+    ).toEqual([
+      { skillId: 'react', minLevel: 5 },
+      { skillId: 'ts', minLevel: 4 },
+      { skillId: 'docker', minLevel: 2 },
+    ])
+  })
+
+  it('mergeSquads leva as skills requeridas da squad absorvida', () => {
+    saveSquads([
+      { id: 'a', name: 'A', requiredSkills: [{ skillId: 'react', minLevel: 2 }] },
+      { id: 'b', name: 'B', requiredSkills: [{ skillId: 'react', minLevel: 4 }] },
+    ])
+    mergeSquads('a', 'b')
+    expect(loadSquads()).toEqual([
+      { id: 'b', name: 'B', aliases: ['A'], requiredSkills: [{ skillId: 'react', minLevel: 4 }] },
+    ])
   })
 })

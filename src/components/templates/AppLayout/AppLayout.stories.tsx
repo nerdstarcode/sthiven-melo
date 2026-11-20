@@ -41,7 +41,7 @@ type Story = StoryObj<typeof meta>
 export const Desktop: Story = {
   play: async ({ canvasElement }) => {
     const menu = within(within(canvasElement).getByRole('navigation', { name: 'Menu do app' }))
-    await expect(menu.getAllByRole('link')).toHaveLength(3)
+    await expect(menu.getAllByRole('link')).toHaveLength(locationOverviewNav(apps.pt).length)
   },
 }
 

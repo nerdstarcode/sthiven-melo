@@ -1,7 +1,7 @@
 import { loadPeople, savePeople } from './peopleStorage'
 import { loadPersonAllocations, savePersonAllocations } from './personAllocationsStorage'
 import { squadNames } from './squadMatching'
-import { loadSquads, saveSquads } from './squadsStorage'
+import { loadSquads, saveSquads, type RequiredSkill } from './squadsStorage'
 import { loadTestReports, saveTestReports } from './testReportsStorage'
 import { normalizeKey } from './text'
 
@@ -26,10 +26,22 @@ export function dedupeAliases(name: string, aliases: string[]): string[] {
   return result
 }
 
+/** Une as skills requeridas; se as duas squads exigem a mesma skill, vale o maior nível mínimo. */
+export function mergeRequiredSkills(
+  target: RequiredSkill[] = [],
+  source: RequiredSkill[] = [],
+): RequiredSkill[] {
+  const bySkill = new Map<string, number>()
+  for (const { skillId, minLevel } of [...target, ...source]) {
+    bySkill.set(skillId, Math.max(minLevel, bySkill.get(skillId) ?? 0))
+  }
+  return [...bySkill].map(([skillId, minLevel]) => ({ skillId, minLevel }))
+}
+
 /**
  * Absorve a squad `sourceId` em `targetId`: o nome e os aliases da source viram
  * aliases da target, e alocações, relatórios de teste e vínculos de pessoas
- * passam para a target. Em conflito (mesma pessoa+sprint, ou mesma sprint no
+ * passam para a target, assim como as skills requeridas. Em conflito (mesma pessoa+sprint, ou mesma sprint no
  * relatório), mantém o registro da target e descarta o da source.
  */
 export function mergeSquads(sourceId: string, targetId: string): SquadMergeResult {
@@ -48,6 +60,9 @@ export function mergeSquads(sourceId: string, targetId: string): SquadMergeResul
   const merged = {
     ...target,
     aliases: dedupeAliases(target.name, [...(target.aliases ?? []), ...squadNames(source)]),
+    ...((target.requiredSkills?.length || source.requiredSkills?.length) && {
+      requiredSkills: mergeRequiredSkills(target.requiredSkills, source.requiredSkills),
+    }),
   }
   saveSquads(squads.filter((s) => s.id !== sourceId).map((s) => (s.id === targetId ? merged : s)))
 
