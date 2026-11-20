@@ -1,5 +1,6 @@
 import {
   CalendarRange,
+  Cloud,
   Layers,
   LayoutDashboard,
   Sparkles,
@@ -19,6 +20,7 @@ export const locationOverviewRoutes = {
   people: `${LOCATION_OVERVIEW_BASE}/pessoas`,
   skills: `${LOCATION_OVERVIEW_BASE}/skills`,
   levels: `${LOCATION_OVERVIEW_BASE}/niveis`,
+  azure: `${LOCATION_OVERVIEW_BASE}/azure`,
 }
 
 /** Itens da sidebar do Location Overview, na ordem exibida. */
@@ -30,6 +32,7 @@ export function locationOverviewNav(t: AppsTranslation): AppNavItem[] {
     { href: locationOverviewRoutes.people, label: t.nav.people, icon: Users },
     { href: locationOverviewRoutes.skills, label: t.nav.skills, icon: Sparkles },
     { href: locationOverviewRoutes.levels, label: t.nav.levels, icon: SlidersHorizontal },
+    { href: locationOverviewRoutes.azure, label: t.nav.azure, icon: Cloud },
   ]
 }
 

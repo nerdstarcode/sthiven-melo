@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import type { ReactNode } from 'react'
+import { DataBackup } from '@/components/molecules/DataBackup'
 import { ResetDemoButton } from '@/components/molecules/ResetDemoButton'
 import { AppLayout } from '@/components/templates/AppLayout'
 import { useTranslation } from '@/i18n'
@@ -38,6 +39,7 @@ export function LocationOverviewLayout({
         actions={
           <>
             {actions}
+            <DataBackup />
             <ResetDemoButton />
           </>
         }

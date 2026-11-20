@@ -35,6 +35,7 @@ export const SHOWCASE_APPS: ShowcaseApp[] = [
       { label: t.nav.allocations, href: locationOverviewRoutes.allocations },
       { label: t.nav.people, href: locationOverviewRoutes.people },
       { label: t.nav.skills, href: locationOverviewRoutes.skills },
+      { label: t.nav.azure, href: locationOverviewRoutes.azure },
     ],
   },
   {

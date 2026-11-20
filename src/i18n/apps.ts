@@ -1,5 +1,6 @@
 import type { Localized } from './types'
 import { allocationTexts, type AllocationTranslation } from './appsAllocation'
+import { azureTexts, type AzureTranslation } from './appsAzure'
 import { planningTexts, type PlanningTranslation } from './appsPlanning'
 
 /** Textos dos apps de /projects (Location Overview e Skills Template). */
@@ -106,7 +107,8 @@ const pt = {
 
 type BaseAppsTranslation = typeof pt
 
-export type AppsTranslation = BaseAppsTranslation & AllocationTranslation & PlanningTranslation
+export type AppsTranslation = BaseAppsTranslation & AllocationTranslation & PlanningTranslation &
+  AzureTranslation
 
 const en: BaseAppsTranslation = {
   common: {
@@ -310,7 +312,7 @@ const es: BaseAppsTranslation = {
 }
 
 export const apps: Localized<AppsTranslation> = {
-  pt: { ...pt, ...allocationTexts.pt, ...planningTexts.pt },
-  en: { ...en, ...allocationTexts.en, ...planningTexts.en },
-  es: { ...es, ...allocationTexts.es, ...planningTexts.es },
+  pt: { ...pt, ...allocationTexts.pt, ...planningTexts.pt, ...azureTexts.pt },
+  en: { ...en, ...allocationTexts.en, ...planningTexts.en, ...azureTexts.en },
+  es: { ...es, ...allocationTexts.es, ...planningTexts.es, ...azureTexts.es },
 }
