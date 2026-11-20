@@ -1,19 +1,26 @@
-'use client';
+import Image from 'next/image'
+import { useTranslation } from '@/i18n'
+import notFoundIllustration from '@p/404.svg'
 
-import Image from "next/image";
-import notFound from '@/../public/404.svg'
 export default function NotFound() {
+  const t = useTranslation('notFound')
+
   return (
-    <span className="min-h-full flex w-full items-center justify-center flex-col">
-      <Image priority src={notFound} alt='NerdStarCode' className='h-full rounded-2xl object-center bg-center object-cover' />
-      <h2 className="flex flex-col text-center cursor-alias select-none group">
-        <div className="text-7xl text-purple-600 animate-jump-in animate-delay-300 animate-once"><div className="animate-wiggle animate-infinite" >404</div></div>
-        <div className="
-        text-purple-800 group-hover:text-purple-500
-        animate-jump-in animate-delay-700 animate-once animate-ease-in 
-        group-hover:drop-shadow-2xl glowing
-        ">NOT FOUND</div>
+    <div className='flex min-h-full w-full flex-col items-center justify-center'>
+      <Image
+        priority
+        src={notFoundIllustration}
+        alt={t.alt}
+        className='h-full rounded-2xl bg-center object-cover object-center'
+      />
+      <h2 className='group flex cursor-alias flex-col text-center select-none'>
+        <span className='animate-jump-in text-7xl text-purple-600 animate-delay-300 animate-once'>
+          <span className='block animate-wiggle animate-infinite'>404</span>
+        </span>
+        <span className='glowing animate-jump-in text-purple-800 animate-delay-700 animate-ease-in animate-once group-hover:text-purple-500 group-hover:drop-shadow-2xl'>
+          {t.title}
+        </span>
       </h2>
-    </span>
-  );
+    </div>
+  )
 }

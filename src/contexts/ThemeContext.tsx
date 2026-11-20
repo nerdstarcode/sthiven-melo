@@ -1,28 +1,28 @@
-'use client'
-import React, { createContext, useState, useEffect, useContext } from 'react';
-type DataContextData = {
-  darkMode?: boolean;
-  setDarkMode?: any;
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+
+interface ThemeContextData {
+  darkMode: boolean
+  setDarkMode: (darkMode: boolean) => void
 }
-const ThemeContext = createContext<DataContextData | null>(null);
 
-export const ThemeProvider = ({ children }: any) => {
-  const [darkMode, setDarkMode] = useState(true);
+export const ThemeContext = createContext<ThemeContextData | null>(null)
+
+const FALLBACK_THEME: ThemeContextData = { darkMode: true, setDarkMode: () => {} }
+
+interface ThemeProviderProps {
+  children: ReactNode
+  initialDarkMode?: boolean
+}
+
+export const ThemeProvider = ({ children, initialDarkMode = true }: ThemeProviderProps) => {
+  const [darkMode, setDarkMode] = useState(initialDarkMode)
+
   useEffect(() => {
-    const HTMLTag = window.document.getElementsByTagName('html')[0];
-    if (darkMode){
-      HTMLTag.classList.add('dark')
-    }else{
-      HTMLTag.classList.remove('dark')
-    }
-  }, [darkMode]);
+    document.documentElement.classList.toggle('dark', darkMode)
+  }, [darkMode])
 
-  return (
-    <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
+  return <ThemeContext.Provider value={{ darkMode, setDarkMode }}>{children}</ThemeContext.Provider>
+}
 
-export const useThemeContext = () => useContext(ThemeContext) as DataContextData;
-
+/** Fora do provider devolve um tema escuro inerte em vez de `null`. */
+export const useThemeContext = (): ThemeContextData => useContext(ThemeContext) ?? FALLBACK_THEME

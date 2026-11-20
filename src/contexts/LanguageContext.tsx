@@ -1,36 +1,58 @@
-'use client'
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { LANGUAGE_STORAGE_KEY } from '@/constants/storage'
 
-export type SupportedLanguage = 'pt' | 'en' | 'es'
+export const SUPPORTED_LANGUAGES = ['pt', 'en', 'es'] as const
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
+export const DEFAULT_LANGUAGE: SupportedLanguage = 'pt'
+
+export function isSupportedLanguage(value: unknown): value is SupportedLanguage {
+  return SUPPORTED_LANGUAGES.includes(value as SupportedLanguage)
+}
 
 interface LanguageContextData {
   language: SupportedLanguage
   setLanguage: (lang: SupportedLanguage) => void
 }
 
-const LanguageContext = createContext<LanguageContextData | undefined>(undefined)
+export const LanguageContext = createContext<LanguageContextData | undefined>(undefined)
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<SupportedLanguage>('pt')
+interface LanguageProviderProps {
+  children: ReactNode
+  /** Idioma fixo inicial. Quando informado, o valor salvo no localStorage é ignorado (útil no Storybook). */
+  initialLanguage?: SupportedLanguage
+}
+
+function readStoredLanguage(): SupportedLanguage | null {
+  try {
+    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
+    return isSupportedLanguage(stored) ? stored : null
+  } catch {
+    return null // localStorage indisponível (modo privado, SSR, etc.)
+  }
+}
+
+function storeLanguage(lang: SupportedLanguage) {
+  try {
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lang)
+  } catch {
+    // localStorage indisponível: a escolha vale só para esta sessão
+  }
+}
+
+export function LanguageProvider({ children, initialLanguage }: LanguageProviderProps) {
+  const [language, setLanguageState] = useState<SupportedLanguage>(
+    initialLanguage ?? DEFAULT_LANGUAGE,
+  )
 
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem('@nerdstarcode:language')
-      if (stored === 'pt' || stored === 'en' || stored === 'es') {
-        setLanguageState(stored)
-      }
-    } catch {
-      // ignore
-    }
-  }, [])
+    if (initialLanguage) return
+    const stored = readStoredLanguage()
+    if (stored) setLanguageState(stored)
+  }, [initialLanguage])
 
   const setLanguage = (lang: SupportedLanguage) => {
     setLanguageState(lang)
-    try {
-      window.localStorage.setItem('@nerdstarcode:language', lang)
-    } catch {
-      // ignore
-    }
+    storeLanguage(lang)
   }
 
   return (
@@ -48,4 +70,7 @@ export function useLanguageContext() {
   return ctx
 }
 
-
+/** Idioma atual sem exigir provider (cai no idioma padrão). Usado pelos componentes de UI. */
+export function useCurrentLanguage(): SupportedLanguage {
+  return useContext(LanguageContext)?.language ?? DEFAULT_LANGUAGE
+}

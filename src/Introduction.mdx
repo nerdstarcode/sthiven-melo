@@ -1,0 +1,54 @@
+import { Meta, ColorPalette, ColorItem, Typeset } from '@storybook/addon-docs/blocks'
+
+<Meta title='Introdução' />
+
+# Portfólio NerdStarCode: componentes
+
+Componentes do site organizados em **Atomic Design**. Cada componente fica em
+`src/components/<tier>/<Nome>/` com:
+
+| Arquivo           | Conteúdo                                              |
+| ----------------- | ----------------------------------------------------- |
+| `Nome.tsx`        | componente (export nomeado + `default`)               |
+| `Nome.stories.tsx`| stories CSF3 com `autodocs` e pelo menos um `play`    |
+| `Nome.test.tsx`   | testes Vitest + Testing Library (`describe/it` em PT) |
+| `index.ts`        | reexporta o componente                                |
+
+## Tiers
+
+- **Atoms**: sem estado e sem compor outros componentes do projeto (`NavLink`, `Container`, ícones).
+- **Molecules**: composição pequena, um callback ou leitura de contexto com fallback por props (`LanguageSwitcher`, `ProjectCard`).
+- **Organisms**: estado real, efeitos (router, three.js) ou composição de moléculas (`NavBar`, `ProjectsGrid`).
+- **Templates**: a casca das páginas (`PageLayout`).
+- **Pages** (`src/pages`): apenas compõem organisms com os dados de `src/data`.
+
+Componentes que dependem de contexto (idioma, tema, área) aceitam **props opcionais** que têm
+prioridade sobre o contexto (`prop ?? contexto ?? padrão`). Assim dá para usá-los isolados em stories e testes.
+
+## Toolbar
+
+Use **Idioma** (pt/en/es) e **Tema** na barra superior: todas as stories são envolvidas pelos mesmos
+providers do `_app`.
+
+## Cores
+
+<ColorPalette>
+  <ColorItem title='dark' subtitle='--color-dark' colors={{ dark: '#1b1b1b' }} />
+  <ColorItem title='light' subtitle='--color-light' colors={{ light: '#f5f5f5' }} />
+  <ColorItem title='primary' subtitle='--color-primary' colors={{ primary: '#b63e96' }} />
+  <ColorItem title='primaryDark' subtitle='--color-primaryDark' colors={{ primaryDark: '#58e6d9' }} />
+  <ColorItem title='fundo' subtitle='bg-zinc-900' colors={{ 'zinc-900': '#18181b' }} />
+</ColorPalette>
+
+Os tokens ficam em `@theme` em `src/styles/globals.css` (Tailwind 4).
+
+## Tipografia
+
+Montserrat via `next/font` (`--font-montserrat`), exposta como a utility `font-mont`.
+
+<Typeset
+  fontFamily='Montserrat, ui-sans-serif, system-ui, sans-serif'
+  fontSizes={['0.75rem', '1rem', '1.25rem', '2.25rem', '3.75rem', '6rem']}
+  fontWeight={700}
+  sampleText='Transformando ideias em realidade'
+/>

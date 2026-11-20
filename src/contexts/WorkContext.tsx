@@ -1,40 +1,40 @@
-'use client'
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import { NO_WORK_AREA, type WorkSelection } from '@/constants/work'
 
 interface DataContextDTO {
-  Work: string
+  Work: WorkSelection
 }
 
 interface DataContextData {
-  dataContext: DataContextDTO;
-  setDataContextData: (
-    Work: string,
-  ) => void;
+  dataContext: DataContextDTO
+  setDataContextData: (work: WorkSelection) => void
 }
 
-const DataContext = createContext<DataContextData>({
-  dataContext: { Work: '' },
-  setDataContextData: () => { },
-});
+export const DataContext = createContext<DataContextData>({
+  dataContext: { Work: NO_WORK_AREA },
+  setDataContextData: () => {},
+})
 
-export function DataContextProvider({ children }: { children: ReactNode }) {
-  const [dataContext, setDataContext] = useState<DataContextDTO>({ Work: '' });
+interface DataContextProviderProps {
+  children: ReactNode
+  initialWork?: WorkSelection
+}
 
-  const setDataContextData = (
-    Work: string,
-  ) => {
-    setDataContext((prevData) => ({
-      Work,
-    }));
-  };
+export function DataContextProvider({
+  children,
+  initialWork = NO_WORK_AREA,
+}: DataContextProviderProps) {
+  const [dataContext, setDataContext] = useState<DataContextDTO>({ Work: initialWork })
+
+  const setDataContextData = (work: WorkSelection) => setDataContext({ Work: work })
 
   return (
     <DataContext.Provider value={{ dataContext, setDataContextData }}>
       {children}
     </DataContext.Provider>
-  );
+  )
 }
 
 export function useDataContext() {
-  return useContext(DataContext);
+  return useContext(DataContext)
 }

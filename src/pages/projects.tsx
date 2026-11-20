@@ -1,131 +1,24 @@
-import AnimatedText from '@/components/AnimatedText';
-import Layout from '@/components/Layout';
-import ProjectCardTemplate from '@/components/ProjectCard/templates/default';
-import Head from 'next/head';
-import ProjectCodedOnly from '@/components/ProjectCard/templates/codedOnly';
-
-//projects
-import nlwSpaceTime from '@p/projects/nlw-space-time.png'
-import cartaoSaude from '@p/projects/cartao-saude.png'
-import nlwUnite from '@p/projects/nlw-unite.png'
-import nlwESports from '@p/projects/nlw-esports.png'
-import igniteLabStorybook from '@p/projects/ignitelab-storybook.png'
-import igniteLabNodejs from '@p/projects/ignitelab-nodejs.png'
-
-import cloneInstagram from '@p/projects/clone-insta.png'
-import loginBootstrap from '@p/projects/login-bootstrap.png'
-
-import nplRedis from '@p/projects/nlp-redis.png'
-import arduino from '@p/projects/arduino.png'
-import spotify from '@p/projects/spotify.png'
-import { useLanguageContext } from '@/contexts/LanguageContext';
-
-const projectsText = {
-  pt: {
-    heading: 'A imaginação aprimora o esforço',
-    metaDescription: 'Projetos que desenvolvi como fullstack, frontend e backend, unindo código, arquitetura e design.',
-  },
-  en: {
-    heading: 'Imagination enhances effort',
-    metaDescription: 'Projects I have built as a fullstack, frontend and backend developer, combining code, architecture and design.',
-  },
-  es: {
-    heading: 'La imaginación potencia el esfuerzo',
-    metaDescription: 'Proyectos que desarrollé como fullstack, frontend y backend, uniendo código, arquitectura y diseño.',
-  },
-}
+import Head from 'next/head'
+import { AnimatedText } from '@/components/atoms/AnimatedText'
+import { Container } from '@/components/atoms/Container'
+import { ProjectsGrid } from '@/components/organisms/ProjectsGrid'
+import { useTranslation } from '@/i18n'
 
 export default function Projects() {
-  const { language } = useLanguageContext()
+  const t = useTranslation('projects')
 
   return (
-    <div className='h-fit min-h-screen'>
+    <>
       <Head>
-        <title>NerdStarCode | Projects Page</title>
-        <meta name='description' content={projectsText[language].metaDescription}></meta>
+        <title>{t.metaTitle}</title>
+        <meta name='description' content={t.metaDescription} />
       </Head>
-      <main className='flex w-full flex-col items-center justify-center'>
-        <Layout classname='pt-16 gap-16'>
-          <AnimatedText text={projectsText[language].heading} className='' />
-          <section className='grid grid-cols-12 gap-4 sm:gap-8 '>
-            {/* <h3 className='col-span-12'>Projetos desenvolvidos</h3> */}
-
-            <ProjectCardTemplate
-              title='Cartão Saúde mais'
-              link='https://sejasaudemais.com.br/'
-              src={cartaoSaude}
-              imageClassName='object-center'
-              summary={`Experiencia profissional como dev pleno para desenvolvimento de site de plano de saúde cartão saúde + em nextjs usando uma api Graphql enquanto orientava um júnior no desenvolvimento`}
-              type='Frontend' />
-            <ProjectCodedOnly
-              title='NLW Unite'
-              github='https://github.com/nerdstarcode/node-nlw-unite'
-              src={nlwUnite}
-              type='Backend' />
-
-
-            <ProjectCodedOnly
-              title='Ignite Lab Nodejs'
-              github='https://github.com/nerdstarcode/ignite-lab-nodejs'
-              src={igniteLabNodejs}
-              type='Backend' />
-
-            <ProjectCodedOnly
-              title='Ignite Lab Storybook'
-              github='https://github.com/nerdstarcode/IgniteLabStorybook'
-              src={igniteLabStorybook}
-              type='Frontend' />
-
-            <ProjectCodedOnly
-              title='NLP Redis'
-              github='https://github.com/nerdstarcode/NLP'
-              src={nplRedis}
-              type='Backend' />
-            <ProjectCardTemplate
-              title='Nlw Space Time'
-              github='https://github.com/nerdstarcode/NLW_SpaceTime'
-              link='https://github.com/nerdstarcode/NLW_SpaceTime'
-              src={nlwSpaceTime}
-              imageClassName='4xl:object-left'
-              summary={`Construido um projeto fullstack em Nextjs, Express e React Native. O Projeto é como um diário onde o usuário se cadastra e adiciona fotos e uma história para sua memória que ficam armazenadas de forma que cria uma timeline de acontecimentos`}
-              type='FullStack' />
-            <ProjectCodedOnly
-              title='Spotify Web'
-              github='https://github.com/nerdstarcode/spotify-music-info'
-              src={spotify}
-              type='Frontend' />
-            <ProjectCodedOnly
-              title='Spotify Server'
-              github='https://github.com/nerdstarcode/spotify-music-info-server'
-              src={spotify}
-              type='Backend' />
-            <ProjectCardTemplate
-              title='NLW Esports'
-              github='https://github.com/nerdstarcode/nlw-esports'
-              link='https://github.com/nerdstarcode/nlw-esports'
-              src={nlwESports}
-              imageClassName='4xl:object-center'
-
-              summary={`Construido um projeto fullstack em Nextjs, Express e React Native. O Projeto tem o objetivo de criar posts para juntar pessoas para jogarem determinados jogos. Há todo o processo de criação de anuncios utilizando a api da twitch para pegar imagens atualizadas dos jogos em questão.`}
-              type='FullStack' />
-            <ProjectCodedOnly
-              title='Clone Instagram'
-              github='https://github.com/nerdstarcode/Clone-Instagram'
-              src={cloneInstagram}
-              type='FrontEnd' />
-            <ProjectCodedOnly
-              title='Login Gitlab Rebrading'
-              github='https://github.com/nerdstarcode/LoginBootstrap'
-              src={loginBootstrap}
-              type='FrontEnd' />
-            <ProjectCodedOnly
-              title='Arduino - Básico'
-              github='https://github.com/nerdstarcode/ProgramasBasicosArduino'
-              src={arduino}
-              type='Others' />
-          </section>
-        </Layout>
-      </main>
-    </div>
+      <div className='flex h-fit min-h-screen w-full flex-col items-center justify-center'>
+        <Container className='gap-16 pt-16'>
+          <AnimatedText text={t.heading} />
+          <ProjectsGrid />
+        </Container>
+      </div>
+    </>
   )
 }

@@ -1,38 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# NerdStarCode: portfólio
 
-## Getting Started
+Portfólio pessoal de Sthiven Melo.
 
-First, run the development server:
+**Stack:** Next.js 15 (Pages Router) · React 19 · TypeScript · Tailwind CSS 4 · motion · three.js · Storybook 10 · Vitest + Testing Library.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+## Scripts
+
+| Comando                   | O que faz                                       |
+| ------------------------- | ----------------------------------------------- |
+| `npm run dev`             | servidor de desenvolvimento                     |
+| `npm run build` / `start` | build e servidor de produção                    |
+| `npm run lint`            | ESLint (flat config, `eslint-config-next`)      |
+| `npm run typecheck`       | `tsc --noEmit`                                  |
+| `npm run format`          | Prettier (+ ordenação de classes Tailwind)      |
+| `npm test` / `test:run`   | Vitest em watch / execução única                |
+| `npm run storybook`       | Storybook em http://localhost:6006              |
+| `npm run build-storybook` | Storybook estático em `storybook-static/`       |
+
+> **Windows:** rode os comandos a partir de `C:\...` (drive em maiúscula). Abrir o terminal em
+> `c:\...` faz o Node carregar React/Vitest duas vezes e quebra build e testes.
+
+## Estrutura
+
+```
+src/
+  components/
+    atoms/       peças sem estado (Icon, NavLink, Container, AnimatedText…)
+    molecules/   composições pequenas (LanguageSwitcher, ProjectCard, ExperienceItem…)
+    organisms/   seções com estado/efeitos (NavBar, MobileMenu, Hero, ProjectsGrid…)
+    templates/   PageLayout (NavBar + main + Footer)
+  constants/     URLs, áreas de atuação, chaves de storage, navegação
+  contexts/      Language, Theme e Work (área selecionada na home)
+  data/          conteúdo do site (projetos, experiências, skills, ferramentas)
+  i18n/          dicionários pt/en/es + useTranslation / useLocalize
+  pages/         rotas: só compõem organisms com dados
+  styles/        globals.css (tokens Tailwind em @theme)
+  test/          setup do Vitest, helpers e o runner das stories
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Como criar um componente
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Escolha o tier: sem estado → atom; composição pequena/um callback → molecule; estado, efeitos ou várias moléculas → organism.
+2. Crie `src/components/<tier>/<Nome>/` com `Nome.tsx`, `Nome.stories.tsx`, `Nome.test.tsx` e `index.ts`.
+3. Textos visíveis vão em `src/i18n/dictionaries.ts`; conteúdo, em `src/data`.
+4. Se depender de contexto, aceite props opcionais com prioridade sobre o contexto.
+5. Story CSF3 com `tags: ['autodocs']`, descrição em português citando onde é usado e um `play`.
+6. Rode `npm run test:run`: além dos testes unitários, `src/test/stories.test.tsx` executa todas as stories e seus `play`.
+   Stories que precisam de navegador real (WebGL etc.) levam a tag `browser-only`.
