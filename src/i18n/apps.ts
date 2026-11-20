@@ -1,5 +1,6 @@
 import type { Localized } from './types'
 import { allocationTexts, type AllocationTranslation } from './appsAllocation'
+import { planningTexts, type PlanningTranslation } from './appsPlanning'
 
 /** Textos dos apps de /projects (Location Overview e Skills Template). */
 const pt = {
@@ -10,6 +11,7 @@ const pt = {
     save: 'Salvar',
     cancel: 'Cancelar',
     close: 'Fechar',
+    selectAll: 'Marcar todos',
     actions: 'Ações',
     loading: 'Carregando…',
     required: 'Campo obrigatório.',
@@ -104,7 +106,7 @@ const pt = {
 
 type BaseAppsTranslation = typeof pt
 
-export type AppsTranslation = BaseAppsTranslation & AllocationTranslation
+export type AppsTranslation = BaseAppsTranslation & AllocationTranslation & PlanningTranslation
 
 const en: BaseAppsTranslation = {
   common: {
@@ -114,6 +116,7 @@ const en: BaseAppsTranslation = {
     save: 'Save',
     cancel: 'Cancel',
     close: 'Close',
+    selectAll: 'Select all',
     actions: 'Actions',
     loading: 'Loading…',
     required: 'Required field.',
@@ -213,6 +216,7 @@ const es: BaseAppsTranslation = {
     save: 'Guardar',
     cancel: 'Cancelar',
     close: 'Cerrar',
+    selectAll: 'Marcar todos',
     actions: 'Acciones',
     loading: 'Cargando…',
     required: 'Campo obligatorio.',
@@ -306,7 +310,7 @@ const es: BaseAppsTranslation = {
 }
 
 export const apps: Localized<AppsTranslation> = {
-  pt: { ...pt, ...allocationTexts.pt },
-  en: { ...en, ...allocationTexts.en },
-  es: { ...es, ...allocationTexts.es },
+  pt: { ...pt, ...allocationTexts.pt, ...planningTexts.pt },
+  en: { ...en, ...allocationTexts.en, ...planningTexts.en },
+  es: { ...es, ...allocationTexts.es, ...planningTexts.es },
 }

@@ -1,3 +1,8 @@
+import {
+  loadPersonSupports,
+  savePersonSupports,
+  type PersonSupport,
+} from './personSupportsStorage'
 import { loadWorkItems, saveWorkItems } from './workItemsStorage'
 import type { WorkItemRow } from './workItems'
 import { loadLevels, saveLevels } from './levelsStorage'
@@ -33,6 +38,8 @@ export interface AppBackup {
   /** Opcionais: backups anteriores às skills não têm. */
   skills?: Skill[]
   personSkills?: PersonSkill[]
+  /** Opcional: backups anteriores aos apoios não têm. */
+  personSupports?: PersonSupport[]
 }
 
 /** Reúne todos os dados persistidos em localStorage (todas as telas) num único objeto exportável. */
@@ -48,6 +55,7 @@ export function exportAllData(): AppBackup {
     hiddenWorkItems: loadHiddenWorkItems(),
     skills: loadSkills(),
     personSkills: loadPersonSkills(),
+    personSupports: loadPersonSupports(),
   }
 }
 
@@ -69,4 +77,5 @@ export function importAllData(data: unknown): void {
   if (Array.isArray(backup.hiddenWorkItems)) saveHiddenWorkItems(backup.hiddenWorkItems)
   if (Array.isArray(backup.skills)) saveSkills(backup.skills)
   if (Array.isArray(backup.personSkills)) savePersonSkills(backup.personSkills)
+  if (Array.isArray(backup.personSupports)) savePersonSupports(backup.personSupports)
 }

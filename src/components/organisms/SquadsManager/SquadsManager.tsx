@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { GitMerge, Pencil, Plus, Trash2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { SelectField, TextField } from '@/components/molecules/FormField'
@@ -36,13 +36,18 @@ const EMPTY_DRAFT: SquadDraft = { id: '', name: '', aliases: '', memberIds: [], 
 export interface SquadsManagerProps {
   /** Confirmação antes de excluir. Padrão: `window.confirm`. */
   confirm?: (message: string) => boolean
+  /** Já abre o formulário de nova squad (atalho vindo do fluxo de sprints). */
+  startCreating?: boolean
 }
 
 /**
  * Cadastro de squads: nome, nomes alternativos (para casar com o Azure), membros e skills
  * requeridas. Permite mesclar uma squad em outra. O vínculo pessoa↔squad fica em `Person.squadIds`.
  */
-export function SquadsManager({ confirm = (m) => window.confirm(m) }: SquadsManagerProps) {
+export function SquadsManager({
+  confirm = (m) => window.confirm(m),
+  startCreating = false,
+}: SquadsManagerProps) {
   const t = useTranslation('apps')
   const { items: squads, setItems: setSquads, ready } = useStoredList(loadSquads)
   const { items: people, setItems: setPeople } = useStoredList(loadPeople)
@@ -56,6 +61,10 @@ export function SquadsManager({ confirm = (m) => window.confirm(m) }: SquadsMana
 
   const skillById = useMemo(() => new Map(skills.map((s) => [s.id, s])), [skills])
   const membersOf = (squadId: string) => people.filter((p) => p.squadIds.includes(squadId))
+
+  useEffect(() => {
+    if (startCreating) setDraft(EMPTY_DRAFT)
+  }, [startCreating])
 
   const openForm = (squad?: Squad) => {
     setError(undefined)

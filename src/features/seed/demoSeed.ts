@@ -6,7 +6,13 @@ import {
   savePersonAllocations,
   type PersonAllocation,
 } from '@/features/location-overview/lib/personAllocationsStorage'
+import {
+  savePersonSupports,
+  type PersonSupport,
+} from '@/features/location-overview/lib/personSupportsStorage'
 import { saveSprints, type Sprint } from '@/features/location-overview/lib/sprintsStorage'
+import type { WorkItemRow } from '@/features/location-overview/lib/workItems'
+import { saveWorkItems } from '@/features/location-overview/lib/workItemsStorage'
 import { saveSquads, type Squad } from '@/features/location-overview/lib/squadsStorage'
 import {
   savePersonSkills,
@@ -252,6 +258,49 @@ export const demoPersonSkills: PersonSkill[] = [
   ...levels('demo-diego', { 'sk-tests': 5, 'sk-ts': 3, 'sk-comm': 4, 'sk-org': 4 }),
 ]
 
+/** Ana (Sr) apoia Bruno (Associate) nas duas primeiras sprints. */
+export const demoSupports: PersonSupport[] = ['sp-10', 'sp-11'].map((sprintId) => ({
+  id: `su-ana-bruno-${sprintId}`,
+  supporterId: 'demo-ana',
+  supportedId: 'demo-bruno',
+  sprintId,
+  percentage: 25,
+}))
+
+/**
+ * SP planejados por squad e sprint, para os cards da sprint mostrarem situações diferentes
+ * (abaixo, no esperado, acima, na extensão, sobrecarga). Viram work items de exemplo.
+ */
+const DEMO_PLANNED: { squad: string; owner: string; points: Record<string, number[]> }[] = [
+  { squad: 'Frontend Web', owner: 'ana@exemplo.dev', points: { 10: [8, 5, 5, 3], 11: [13, 8, 8, 5, 5, 3], 12: [8, 8, 5, 3] } },
+  { squad: 'Plataforma', owner: 'bruno@exemplo.dev', points: { 10: [8, 5, 3], 11: [13, 8, 5, 3], 12: [8, 5, 3, 3] } },
+  { squad: 'Dados', owner: 'carla@exemplo.dev', points: { 10: [3, 2], 11: [5, 3, 1] } },
+]
+
+export const demoWorkItems: WorkItemRow[] = DEMO_PLANNED.flatMap(({ squad, owner, points }) =>
+  Object.entries(points).flatMap(([sprint, values]) =>
+    values.map((storyPoints, index) => ({
+      id: 0,
+      workItemType: 'User Story',
+      title: `${squad} · história ${index + 1} (exemplo)`,
+      assignedTo: owner,
+      email: owner,
+      state: 'Active',
+      tags: '',
+      iterationPath: `Portfolio/${squad}/Sprint ${sprint}`,
+      sprint: `Sprint ${sprint}`,
+      fiscalYear: 'FY26-27',
+      storyPoints,
+      effort: 0,
+      timeCriticality: 0,
+      wsjf: 0,
+      pontoExecucao: 0,
+      runs: 0,
+      isDelayed: false,
+    })),
+  ),
+).map((item, index) => ({ ...item, id: 9000 + index }))
+
 function writeDemoData() {
   saveSkills(demoSkills)
   savePersonSkills(demoPersonSkills)
@@ -261,6 +310,8 @@ function writeDemoData() {
   saveSprints(demoSprints)
   savePeople(demoPeople)
   savePersonAllocations(demoAllocations)
+  savePersonSupports(demoSupports)
+  saveWorkItems(demoWorkItems)
   writeJson(SEED_FLAG_KEY, SEED_VERSION)
 }
 

@@ -58,3 +58,10 @@ export function addDays(date: Date, days: number): Date {
   next.setUTCDate(next.getUTCDate() + days)
   return next
 }
+
+/** "AAAA-MM-DD" de uma data no fuso local. */
+export function localDateKey(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}

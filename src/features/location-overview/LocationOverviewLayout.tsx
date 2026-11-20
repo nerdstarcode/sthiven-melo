@@ -3,9 +3,10 @@ import type { ReactNode } from 'react'
 import { ResetDemoButton } from '@/components/molecules/ResetDemoButton'
 import { AppLayout } from '@/components/templates/AppLayout'
 import { useTranslation } from '@/i18n'
+import { LOCATION_OVERVIEW_NAME } from './constants'
 import { locationOverviewNav } from './navigation'
 
-export const LOCATION_OVERVIEW_NAME = 'Location Overview'
+export { LOCATION_OVERVIEW_NAME }
 
 export interface LocationOverviewLayoutProps {
   title: string

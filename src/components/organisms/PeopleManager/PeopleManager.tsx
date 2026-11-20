@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { Pencil, Plus, Sparkles, Trash2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { SelectField, TextField } from '@/components/molecules/FormField'
@@ -21,6 +21,7 @@ import {
   loadPersonAllocations,
 } from '@/features/location-overview/lib/personAllocationsStorage'
 import { loadSquads } from '@/features/location-overview/lib/squadsStorage'
+import { removeSupportsOfPerson } from '@/features/location-overview/lib/personSupportsStorage'
 import { useStoredList } from '@/features/shared/useStoredList'
 import {
   loadPersonSkills,
@@ -37,13 +38,18 @@ const SKILLS_PREVIEW = 3
 export interface PeopleManagerProps {
   /** Confirmação antes de excluir. Padrão: `window.confirm`. */
   confirm?: (message: string) => boolean
+  /** Já abre o formulário de nova pessoa (atalho vindo do fluxo de sprints). */
+  startCreating?: boolean
 }
 
 /**
  * Cadastro de pessoas do Location Overview: cargo (que define o nível), squads e skills.
  * Excluir uma pessoa remove também as skills e as alocações dela.
  */
-export function PeopleManager({ confirm = (m) => window.confirm(m) }: PeopleManagerProps) {
+export function PeopleManager({
+  confirm = (m) => window.confirm(m),
+  startCreating = false,
+}: PeopleManagerProps) {
   const t = useTranslation('apps')
   const { items: people, setItems: setPeople, ready } = useStoredList(loadPeople)
   const { items: squads } = useStoredList(loadSquads)
@@ -58,6 +64,10 @@ export function PeopleManager({ confirm = (m) => window.confirm(m) }: PeopleMana
 
   const squadName = useMemo(() => new Map(squads.map((s) => [s.id, s.name])), [squads])
   const cargoByName = useMemo(() => new Map(cargos.map((c) => [c.cargo, c])), [cargos])
+
+  useEffect(() => {
+    if (startCreating) setDraft(EMPTY_PERSON)
+  }, [startCreating])
 
   const openForm = (person: Person) => {
     setDraft(person)
@@ -79,6 +89,7 @@ export function PeopleManager({ confirm = (m) => window.confirm(m) }: PeopleMana
     loadPersonAllocations()
       .filter((a) => a.personId === person.id)
       .forEach((a) => deletePersonAllocation(a.id))
+    removeSupportsOfPerson(person.id)
     setPersonSkills(removeSkillsOfPerson(person.id))
     setPeople(deletePerson(person.id))
   }
