@@ -98,9 +98,15 @@ export function AllocationGroupDetail({
   const [error, setError] = useState<string>()
   const [undo, setUndo] = useState<{ items: PersonAllocation[]; message: string } | null>(null)
   const [supportFor, setSupportFor] = useState<string | null>(null)
-  const [moveOpen, setMoveOpen] = useState(false)
+  /** Alocações que o modal de mover vai levar (todas ou só as selecionadas); null = fechado. */
+  const [moveIds, setMoveIds] = useState<string[] | null>(null)
   const [moveTarget, setMoveTarget] = useState('')
   const [moveError, setMoveError] = useState<string>()
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [bulkPercentage, setBulkPercentage] = useState(100)
+
+  // Só vale o que ainda está no grupo (depois de mover/remover, a seleção some sozinha).
+  const selected = new Set(entries.filter((e) => selectedIds.has(e.id)).map((e) => e.id))
 
   const peopleById = new Map(people.map((p) => [p.id, p]))
   const nameOf = (personId: string) => peopleById.get(personId)?.nome ?? '—'
@@ -158,14 +164,31 @@ export function AllocationGroupDetail({
     setUndo({ items: removed, message: format(t.group.removed, { name: nameOf(entry.personId) }) })
   }
 
-  const moveAll = () => {
+  const openMove = (ids: string[]) => {
+    setMoveTarget('')
+    setMoveError(undefined)
+    setMoveIds(ids)
+  }
+
+  const move = () => {
+    if (!moveIds) return
     if (!moveTarget) return setMoveError(t.allocations.moveTargetRequired)
-    const message = onMove(
-      entries.map((e) => e.id),
-      moveTarget,
-    )
+    const message = onMove(moveIds, moveTarget)
     if (message) return setMoveError(message)
-    setMoveOpen(false)
+    setMoveIds(null)
+    setSelectedIds(new Set())
+  }
+
+  const applyBulkPercentage = () => {
+    if (report(onSetPercentage([...selected], bulkPercentage))) setSelectedIds(new Set())
+  }
+
+  const removeSelected = () => {
+    const removed = onRemove([...selected])
+    if (!removed.length) return
+    setError(undefined)
+    setSelectedIds(new Set())
+    setUndo({ items: removed, message: format(t.group.removedMany, { count: removed.length }) })
   }
 
   const pointsOf = (entry: PersonAllocation) =>
@@ -307,11 +330,7 @@ export function AllocationGroupDetail({
           <Button
             variant='secondary'
             disabled={entries.length === 0}
-            onClick={() => {
-              setMoveTarget('')
-              setMoveError(undefined)
-              setMoveOpen(true)
-            }}
+            onClick={() => openMove(entries.map((e) => e.id))}
           >
             {t.allocations.moveAll}
           </Button>
@@ -387,27 +406,69 @@ export function AllocationGroupDetail({
         />
       )}
 
+      {selected.size > 0 && (
+        <div
+          role='toolbar'
+          aria-label={format(t.group.selected, { count: selected.size })}
+          className='flex flex-wrap items-end gap-3 rounded-md border border-accent/50 bg-surface-elevated p-3'
+        >
+          <p className='self-center text-sm font-medium text-fg-strong'>
+            {format(t.group.selected, { count: selected.size })}
+          </p>
+          <label className='flex flex-col gap-1'>
+            <span className='text-xs font-medium text-fg'>{t.group.bulkPercentage}</span>
+            <Input
+              type='number'
+              min={1}
+              max={100}
+              value={bulkPercentage}
+              className='w-24 text-right'
+              onChange={(e) => setBulkPercentage(Number(e.target.value))}
+            />
+          </label>
+          <Button variant='secondary' onClick={applyBulkPercentage}>
+            {t.group.applyPercentage}
+          </Button>
+          <Button variant='secondary' onClick={() => openMove([...selected])}>
+            {t.group.moveSelected}
+          </Button>
+          <Button variant='secondary' onClick={removeSelected}>
+            <Trash2 size={14} aria-hidden /> {t.group.removeSelected}
+          </Button>
+          <Button variant='ghost' onClick={() => setSelectedIds(new Set())}>
+            {t.group.clearSelection}
+          </Button>
+        </div>
+      )}
+
       <DataTable
         data={entries}
         columns={columns}
         caption={`${squad.name} · ${formatSprintLabel(sprint)}`}
         emptyMessage={t.group.empty}
+        selection={{
+          selected,
+          onChange: setSelectedIds,
+          getId: (e) => e.id,
+          rowLabel: (e) => format(t.group.selectRow, { name: nameOf(e.personId) }),
+          allLabel: t.group.selectAll,
+        }}
       />
 
       {children}
 
       <Modal
-        open={moveOpen}
-        onClose={() => setMoveOpen(false)}
-        title={t.allocations.moveAll}
+        open={moveIds !== null}
+        onClose={() => setMoveIds(null)}
+        title={moveIds?.length === entries.length ? t.allocations.moveAll : t.group.moveSelected}
         closeLabel={t.common.close}
         footer={
           <>
-            <Button variant='secondary' onClick={() => setMoveOpen(false)}>
+            <Button variant='secondary' onClick={() => setMoveIds(null)}>
               {t.common.cancel}
             </Button>
-            <Button onClick={moveAll}>
-              {format(t.allocations.moveButton, { count: entries.length })}
+            <Button onClick={move}>
+              {format(t.allocations.moveButton, { count: moveIds?.length ?? 0 })}
             </Button>
           </>
         }

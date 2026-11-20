@@ -30,9 +30,65 @@ export interface DataTableProps<T> {
   /** Valores do rodapé por id de coluna. */
   footer?: Record<string, ReactNode>
   caption?: string
+  /** Seleção de linhas por checkbox (controlada): adiciona a coluna de seleção no início. */
+  selection?: DataTableSelection<T>
 }
 
-/** Tabela com ordenação por coluna (TanStack Table), linhas clicáveis e rodapé opcional. */
+export interface DataTableSelection<T> {
+  selected: ReadonlySet<string>
+  onChange: (selected: Set<string>) => void
+  getId: (row: T) => string
+  /** Rótulo do checkbox de cada linha. */
+  rowLabel: (row: T) => string
+  /** Rótulo do checkbox que marca/desmarca todas. */
+  allLabel: string
+}
+
+const CHECKBOX = 'size-4 cursor-pointer accent-accent'
+const SELECT_CELL = 'w-10 px-3 py-2'
+
+/** Checkbox do cabeçalho: marca/desmarca todas e fica parcial quando só algumas estão marcadas. */
+function SelectAllCheckbox<T>({ data, selection }: { data: T[]; selection: DataTableSelection<T> }) {
+  const { selected, onChange, getId, allLabel } = selection
+  const ids = data.map(getId)
+  const count = ids.filter((id) => selected.has(id)).length
+  const all = count > 0 && count === ids.length
+  return (
+    <input
+      type='checkbox'
+      aria-label={allLabel}
+      className={CHECKBOX}
+      checked={all}
+      ref={(el) => {
+        if (el) el.indeterminate = count > 0 && !all
+      }}
+      onChange={() => onChange(all ? new Set() : new Set(ids))}
+    />
+  )
+}
+
+function SelectRowCheckbox<T>({ row, selection }: { row: T; selection: DataTableSelection<T> }) {
+  const { selected, onChange, getId, rowLabel } = selection
+  const id = getId(row)
+  return (
+    <input
+      type='checkbox'
+      aria-label={rowLabel(row)}
+      className={CHECKBOX}
+      checked={selected.has(id)}
+      onClick={(event) => event.stopPropagation()}
+      onKeyDown={(event) => event.stopPropagation()}
+      onChange={() => {
+        const next = new Set(selected)
+        if (next.has(id)) next.delete(id)
+        else next.add(id)
+        onChange(next)
+      }}
+    />
+  )
+}
+
+/** Tabela com ordenação por coluna (TanStack Table), linhas clicáveis, seleção e rodapé opcionais. */
 export function DataTable<T>({
   data,
   columns,
@@ -41,6 +97,7 @@ export function DataTable<T>({
   rowLabel,
   footer,
   caption,
+  selection,
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const table = useReactTable({
@@ -67,6 +124,11 @@ export function DataTable<T>({
         <thead className='bg-surface-elevated'>
           {table.getHeaderGroups().map((group) => (
             <tr key={group.id}>
+              {selection && (
+                <th scope='col' className={twMerge(SELECT_CELL, 'border-b border-line text-left')}>
+                  <SelectAllCheckbox data={data} selection={selection} />
+                </th>
+              )}
               {group.headers.map((header) => {
                 const meta = header.column.columnDef.meta ?? {}
                 const sorted = header.column.getIsSorted()
@@ -126,6 +188,11 @@ export function DataTable<T>({
                   'cursor-pointer hover:bg-surface-elevated focus-visible:outline-1 focus-visible:outline-accent',
               )}
             >
+              {selection && (
+                <td className={SELECT_CELL}>
+                  <SelectRowCheckbox row={row.original} selection={selection} />
+                </td>
+              )}
               {row.getVisibleCells().map((cell) => {
                 const meta = cell.column.columnDef.meta ?? {}
                 return (
@@ -147,6 +214,7 @@ export function DataTable<T>({
         {footer && (
           <tfoot className='bg-surface-elevated'>
             <tr>
+              {selection && <td />}
               {table.getAllLeafColumns().map((column) => {
                 const meta = column.columnDef.meta ?? {}
                 return (

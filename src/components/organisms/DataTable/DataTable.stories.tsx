@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import type { ColumnDef } from '@tanstack/react-table'
 import { expect, fn, userEvent, within } from 'storybook/test'
+import { useState } from 'react'
 import { DataTable } from './DataTable'
 
 interface Row {
@@ -68,4 +69,33 @@ export const LinhaClicavel: Story = {
 
 export const ComRodape: Story = { args: { footer: { nome: 'Total', percentual: '250%' } } }
 
-export const Vazia: Story = { args: { data: [], emptyMessage: 'Nenhuma pessoa cadastrada.' } }
+function SelectionDemo() {
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  return (
+    <div className='flex flex-col gap-2'>
+      <p className='text-sm text-fg'>{selected.size} selecionada(s)</p>
+      <DataTable
+        data={rows}
+        columns={columns}
+        selection={{
+          selected,
+          onChange: setSelected,
+          getId: (row) => row.id,
+          rowLabel: (row) => `Selecionar ${row.nome}`,
+          allLabel: 'Selecionar todas',
+        }}
+      />
+    </div>
+  )
+}
+
+export const ComSelecao: Story = {
+  render: () => <SelectionDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('checkbox', { name: 'Selecionar todas' }))
+    await expect(canvas.getByText('3 selecionada(s)')).toBeInTheDocument()
+  },
+}
+
+export const Vazia: Story ={ args: { data: [], emptyMessage: 'Nenhuma pessoa cadastrada.' } }

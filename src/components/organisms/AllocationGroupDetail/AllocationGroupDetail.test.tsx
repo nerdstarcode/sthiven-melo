@@ -78,6 +78,50 @@ describe('AllocationGroupDetail', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Passaria de 100%.')
   })
 
+  describe('ações em lote', () => {
+    const anaEntry = plan.entries.find((e) => e.personId === 'demo-ana')!
+
+    it('sem seleção não mostra a barra; com seleção, aplica a % só nas marcadas', async () => {
+      const { props, user } = setup()
+      expect(screen.queryByRole('toolbar')).not.toBeInTheDocument()
+      await user.click(screen.getByRole('checkbox', { name: 'Selecionar Ana (exemplo)' }))
+      const toolbar = screen.getByRole('toolbar', { name: '1 selecionada(s)' })
+      const input = within(toolbar).getByLabelText('% das selecionadas')
+      await user.clear(input)
+      await user.type(input, '40')
+      await user.click(within(toolbar).getByRole('button', { name: 'Aplicar %' }))
+      expect(props.onSetPercentage).toHaveBeenCalledWith([anaEntry.id], 40)
+      expect(screen.queryByRole('toolbar')).not.toBeInTheDocument()
+    })
+
+    it('move só as selecionadas para outra squad', async () => {
+      const { props, user } = setup()
+      await user.click(screen.getByRole('checkbox', { name: 'Selecionar Ana (exemplo)' }))
+      await user.click(screen.getByRole('button', { name: 'Mover selecionadas' }))
+      const dialog = screen.getByRole('dialog')
+      await user.selectOptions(within(dialog).getByLabelText('Nova squad'), 'sq-platform')
+      await user.click(within(dialog).getByRole('button', { name: 'Mover 1 pessoa(s)' }))
+      expect(props.onMove).toHaveBeenCalledWith([anaEntry.id], 'sq-platform')
+    })
+
+    it('remove as selecionadas com Desfazer', async () => {
+      const { props, user } = setup()
+      await user.click(screen.getByRole('checkbox', { name: 'Selecionar todas' }))
+      expect(screen.getByRole('toolbar', { name: `${plan.entries.length} selecionada(s)` })).toBeInTheDocument()
+      await user.click(screen.getByRole('button', { name: 'Remover selecionadas' }))
+      expect(props.onRemove).toHaveBeenCalledWith(plan.entries.map((e) => e.id))
+      expect(screen.getByText('1 alocação(ões) removida(s)')).toBeInTheDocument()
+    })
+
+    it('mostra o erro devolvido ao aplicar a % e mantém a seleção', async () => {
+      const { user } = setup({ onSetPercentage: vi.fn(() => 'Passaria de 100%.') })
+      await user.click(screen.getByRole('checkbox', { name: 'Selecionar Ana (exemplo)' }))
+      await user.click(screen.getByRole('button', { name: 'Aplicar %' }))
+      expect(screen.getByRole('alert')).toHaveTextContent('Passaria de 100%.')
+      expect(screen.getByRole('toolbar')).toBeInTheDocument()
+    })
+  })
+
   it('cadastra apoio pela linha', async () => {
     const { props, user } = setup()
     await user.click(screen.getByRole('button', { name: 'Cadastrar apoio de Sthiven Melo' }))
