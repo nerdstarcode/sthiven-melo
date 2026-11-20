@@ -16,6 +16,7 @@ import type { Sprint } from './sprintsStorage'
 import { loadPersonAllocations, savePersonAllocations } from './personAllocationsStorage'
 import type { PersonAllocation } from './personAllocationsStorage'
 import { loadHiddenWorkItems, saveHiddenWorkItems } from './hiddenWorkItemsStorage'
+import { loadTestRuns, saveTestRuns, type StoredTestRuns } from './testRunsStorage'
 import {
   loadPersonSkills,
   loadSkills,
@@ -40,6 +41,8 @@ export interface AppBackup {
   personSkills?: PersonSkill[]
   /** Opcional: backups anteriores aos apoios não têm. */
   personSupports?: PersonSupport[]
+  /** Opcional: backups anteriores aos test runs não têm. */
+  testRuns?: StoredTestRuns[]
 }
 
 /** Reúne todos os dados persistidos em localStorage (todas as telas) num único objeto exportável. */
@@ -56,6 +59,7 @@ export function exportAllData(): AppBackup {
     skills: loadSkills(),
     personSkills: loadPersonSkills(),
     personSupports: loadPersonSupports(),
+    testRuns: loadTestRuns(),
   }
 }
 
@@ -78,4 +82,5 @@ export function importAllData(data: unknown): void {
   if (Array.isArray(backup.skills)) saveSkills(backup.skills)
   if (Array.isArray(backup.personSkills)) savePersonSkills(backup.personSkills)
   if (Array.isArray(backup.personSupports)) savePersonSupports(backup.personSupports)
+  if (Array.isArray(backup.testRuns)) saveTestRuns(backup.testRuns)
 }

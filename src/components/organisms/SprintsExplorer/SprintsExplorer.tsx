@@ -1,3 +1,5 @@
+import { BarChart3 } from 'lucide-react'
+import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Breadcrumb, type BreadcrumbItem } from '@/components/molecules/Breadcrumb'
 import { AllocationFormModal } from '@/components/organisms/AllocationFormModal'
@@ -56,6 +58,7 @@ import {
 import { loadSquads } from '@/features/location-overview/lib/squadsStorage'
 import { loadWorkItems } from '@/features/location-overview/lib/workItemsStorage'
 import {
+  analysisHref,
   locationOverviewRoutes,
   sprintsHref,
   type SprintsSelection,
@@ -180,7 +183,15 @@ export function SprintsExplorer({
     const plan = squadSprintPlan(squad, sprint, base)
     return (
       <div className='flex flex-col gap-4'>
-        {trail}
+        <div className='flex flex-wrap items-center justify-between gap-3'>
+          {trail}
+          <Link
+            href={analysisHref({ sprintId: sprint.id, squadId: squad.id })}
+            className='inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline'
+          >
+            <BarChart3 size={14} aria-hidden /> {t.analysis.openAnalysis}
+          </Link>
+        </div>
         <AllocationGroupDetail
           squad={squad}
           sprint={sprint}

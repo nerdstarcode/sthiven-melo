@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   CalendarRange,
   Cloud,
   Layers,
@@ -21,12 +22,23 @@ export const locationOverviewRoutes = {
   skills: `${LOCATION_OVERVIEW_BASE}/skills`,
   levels: `${LOCATION_OVERVIEW_BASE}/niveis`,
   azure: `${LOCATION_OVERVIEW_BASE}/azure`,
+  analysis: `${LOCATION_OVERVIEW_BASE}/analise`,
+}
+
+/** URL da análise: `?sprint=` e `&squad=` abrem a squad na sprint. */
+export function analysisHref({ sprintId, squadId }: { sprintId?: string; squadId?: string }): string {
+  const params = new URLSearchParams()
+  if (sprintId) params.set('sprint', sprintId)
+  if (squadId) params.set('squad', squadId)
+  const query = params.toString()
+  return query ? `${locationOverviewRoutes.analysis}?${query}` : locationOverviewRoutes.analysis
 }
 
 /** Itens da sidebar do Location Overview, na ordem exibida. */
 export function locationOverviewNav(t: AppsTranslation): AppNavItem[] {
   return [
     { href: locationOverviewRoutes.sprints, label: t.nav.sprints, icon: CalendarRange },
+    { href: locationOverviewRoutes.analysis, label: t.analysis.nav, icon: BarChart3 },
     { href: locationOverviewRoutes.allocations, label: t.nav.allocations, icon: LayoutDashboard },
     { href: locationOverviewRoutes.squads, label: t.nav.squads, icon: Layers },
     { href: locationOverviewRoutes.people, label: t.nav.people, icon: Users },

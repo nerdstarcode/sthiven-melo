@@ -1,4 +1,9 @@
 import { saveCargos, type CargoConfig } from '@/features/location-overview/lib/cargosStorage'
+import { workingDaysBetween } from '@/features/location-overview/lib/dates'
+import {
+  saveTestRuns,
+  type StoredTestRuns,
+} from '@/features/location-overview/lib/testRunsStorage'
 import { DEFAULT_LEVELS, saveLevels } from '@/features/location-overview/lib/levelsStorage'
 import { readJson, writeJson } from '@/features/location-overview/lib/localStore'
 import { savePeople, type Person } from '@/features/location-overview/lib/peopleStorage'
@@ -277,15 +282,33 @@ const DEMO_PLANNED: { squad: string; owner: string; points: Record<string, numbe
   { squad: 'Dados', owner: 'carla@exemplo.dev', points: { 10: [3, 2], 11: [5, 3, 1] } },
 ]
 
+/**
+ * Andamento de exemplo: a sprint 10 já fechou tudo, a 11 (atual) está no meio e a 12 ainda não
+ * começou. Itens fechados ganham data de fechamento ao longo da sprint, para o burnup.
+ */
+function demoProgress(sprintNumber: number, index: number, total: number) {
+  const sprint = demoSprints.find((s) => s.number === sprintNumber)
+  const days = sprint ? workingDaysBetween(sprint.startDate, sprint.endDate) : []
+  if (sprintNumber === 10) {
+    const day = days[Math.min(days.length - 1, 1 + Math.floor((index * days.length) / total))]
+    return { state: 'Closed', closedDate: `${day}T18:00:00Z` }
+  }
+  if (sprintNumber === 11) {
+    if (index < Math.ceil(total / 3)) return { state: 'Closed', closedDate: `${days[1 + index]}T18:00:00Z` }
+    return { state: index % 2 === 0 ? 'Testing QA' : 'Active' }
+  }
+  return { state: 'New' }
+}
+
 export const demoWorkItems: WorkItemRow[] = DEMO_PLANNED.flatMap(({ squad, owner, points }) =>
   Object.entries(points).flatMap(([sprint, values]) =>
     values.map((storyPoints, index) => ({
       id: 0,
-      workItemType: 'User Story',
+      workItemType: index % 4 === 3 ? 'Bug' : 'User Story',
       title: `${squad} · história ${index + 1} (exemplo)`,
-      assignedTo: owner,
+      assignedTo: basePeople.find((p) => p.email === owner)?.nome ?? owner,
       email: owner,
-      state: 'Active',
+      ...demoProgress(Number(sprint), index, values.length),
       tags: '',
       iterationPath: `Portfolio/${squad}/Sprint ${sprint}`,
       sprint: `Sprint ${sprint}`,
@@ -301,7 +324,42 @@ export const demoWorkItems: WorkItemRow[] = DEMO_PLANNED.flatMap(({ squad, owner
   ),
 ).map((item, index) => ({ ...item, id: 9000 + index }))
 
+/** Test runs de exemplo da squad Web, como se tivessem vindo da sincronização com o Azure. */
+export const demoTestRuns: StoredTestRuns[] = [
+  {
+    squadId: 'sq-web',
+    sprintId: 'sp-10',
+    summary: {
+      runCount: 9,
+      automatedRuns: 4,
+      manualRuns: 5,
+      totalTests: 86,
+      passed: 74,
+      failed: 7,
+      notRun: 3,
+      notApplicable: 2,
+      runsByDay: { '2026-11-05': 2, '2026-11-09': 3, '2026-11-11': 2, '2026-11-13': 2 },
+    },
+  },
+  {
+    squadId: 'sq-web',
+    sprintId: 'sp-11',
+    summary: {
+      runCount: 4,
+      automatedRuns: 2,
+      manualRuns: 2,
+      totalTests: 31,
+      passed: 25,
+      failed: 4,
+      notRun: 2,
+      notApplicable: 0,
+      runsByDay: { '2026-11-17': 1, '2026-11-18': 2, '2026-11-19': 1 },
+    },
+  },
+]
+
 function writeDemoData() {
+  saveTestRuns(demoTestRuns)
   saveSkills(demoSkills)
   savePersonSkills(demoPersonSkills)
   saveLevels(DEFAULT_LEVELS)

@@ -4,13 +4,16 @@ import {
   sprintSquadPlans,
   type PlanBase,
 } from '@/features/location-overview/lib/sprintPlanning'
+import { analyzeSquadSprint } from '@/features/location-overview/lib/sprintAnalysis'
 import { sprintPhase } from '@/features/location-overview/lib/sprintsStorage'
+import { findTestRuns } from '@/features/location-overview/lib/testRunsStorage'
 import {
   demoAllocations,
   demoCargos,
   demoPeople,
   demoSprints,
   demoSquads,
+  demoTestRuns,
   demoWorkItems,
 } from './demoSeed'
 
@@ -30,7 +33,19 @@ export const demoSupportContext = {
   cargos: demoCargos,
 }
 
-export const demoTimelineRows = demoSprints.map((sprint) => ({
+/** Métricas da análise da squad Web na sprint (`sp-10` fechada ou `sp-11` em andamento). */
+export function demoSprintMetrics(sprintId: 'sp-10' | 'sp-11' | 'sp-12' = 'sp-11') {
+  const squad = demoSquads[0]
+  const sprint = demoSprints.find((s) => s.id === sprintId)!
+  return analyzeSquadSprint(
+    squad,
+    sprint,
+    { ...demoPlanBase, cargos: demoCargos },
+    { testRuns: findTestRuns(demoTestRuns, squad.id, sprint.id) },
+  )
+}
+
+export const demoTimelineRows =demoSprints.map((sprint) => ({
   sprint,
   phase: sprintPhase(sprint, DEMO_TODAY),
   plan: sprintPlanSummary(sprintSquadPlans(sprint, demoSquads, demoPlanBase)),

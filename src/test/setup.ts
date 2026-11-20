@@ -41,6 +41,18 @@ vi.stubGlobal(
   })),
 )
 
+// O ECharts precisa de canvas, que o jsdom não tem: nos testes o gráfico vira um div com as séries.
+vi.mock('echarts-for-react', async () => {
+  const { createElement } = await import('react')
+  return {
+    default: ({ option }: { option: { series?: { name?: string }[] } }) =>
+      createElement('div', {
+        'data-testid': 'echart',
+        'data-series': (option.series ?? []).map((s) => s.name ?? '').join('|'),
+      }),
+  }
+})
+
 // next/image exige width/height para `src` string (o que o Vite entrega nos imports estáticos).
 vi.mock('next/image', async () => {
   const { createElement } = await import('react')
