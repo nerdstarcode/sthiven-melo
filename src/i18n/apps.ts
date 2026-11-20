@@ -3,6 +3,7 @@ import { allocationTexts, type AllocationTranslation } from './appsAllocation'
 import { analysisTexts, type AnalysisTranslation } from './appsAnalysis'
 import { azureTexts, type AzureTranslation } from './appsAzure'
 import { dashboardTexts, type DashboardTranslation } from './appsDashboard'
+import { skillsTemplateTexts, type SkillsTemplateTranslation } from './appsSkillsTemplate'
 import { planningTexts, type PlanningTranslation } from './appsPlanning'
 
 /** Textos dos apps de /projects (Location Overview e Skills Template). */
@@ -110,7 +111,8 @@ const pt = {
 type BaseAppsTranslation = typeof pt
 
 export type AppsTranslation = BaseAppsTranslation & AllocationTranslation & PlanningTranslation &
-  AzureTranslation & AnalysisTranslation & DashboardTranslation
+  AzureTranslation & AnalysisTranslation & DashboardTranslation &
+  SkillsTemplateTranslation
 
 const en: BaseAppsTranslation = {
   common: {
@@ -321,6 +323,7 @@ export const apps: Localized<AppsTranslation> = {
     ...azureTexts.pt,
     ...analysisTexts.pt,
     ...dashboardTexts.pt,
+    ...skillsTemplateTexts.pt,
   },
   en: {
     ...en,
@@ -329,6 +332,7 @@ export const apps: Localized<AppsTranslation> = {
     ...azureTexts.en,
     ...analysisTexts.en,
     ...dashboardTexts.en,
+    ...skillsTemplateTexts.en,
   },
   es: {
     ...es,
@@ -337,5 +341,6 @@ export const apps: Localized<AppsTranslation> = {
     ...azureTexts.es,
     ...analysisTexts.es,
     ...dashboardTexts.es,
+    ...skillsTemplateTexts.es,
   },
 }

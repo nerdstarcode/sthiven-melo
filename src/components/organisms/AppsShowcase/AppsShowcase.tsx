@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/atoms/Badge'
 import { LOCATION_OVERVIEW_NAME } from '@/features/location-overview/constants'
 import { locationOverviewRoutes } from '@/features/location-overview/navigation'
+import { SKILLS_TEMPLATE_NAME, SKILLS_TEMPLATE_ROUTE } from '@/features/skills/SkillsTemplateLayout'
 import { format, useTranslation } from '@/i18n'
 import type { AppsTranslation } from '@/i18n/apps'
 
@@ -40,9 +41,10 @@ export const SHOWCASE_APPS: ShowcaseApp[] = [
   },
   {
     id: 'skills-template',
-    name: 'Skills Template',
+    name: SKILLS_TEMPLATE_NAME,
     description: (t) => t.skillsDescription,
     icon: Sparkles,
+    href: SKILLS_TEMPLATE_ROUTE,
     hard: ['React', 'TypeScript', 'Tailwind'],
     soft: ['Autoconhecimento', 'Comunicação'],
   },

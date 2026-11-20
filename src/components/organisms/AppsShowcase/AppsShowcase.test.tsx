@@ -18,11 +18,20 @@ describe('AppsShowcase', () => {
     expect(within(card).getByText('TanStack Table')).toBeInTheDocument()
   })
 
-  it('apps sem rota aparecem como em breve ou fictício, sem link', () => {
+  it('o projeto fictício aparece sem link', () => {
     renderWithProviders(<AppsShowcase />)
     const rpg = screen.getByRole('listitem', { name: 'Fichas de RPG' })
     expect(within(rpg).getByText('Projeto fictício')).toBeInTheDocument()
     expect(within(rpg).queryByRole('link')).not.toBeInTheDocument()
-    expect(within(screen.getByRole('listitem', { name: 'Skills Template' })).getByText('Em breve')).toBeInTheDocument()
+  })
+
+  it('Skills Template abre o app', () => {
+    renderWithProviders(<AppsShowcase />)
+    const card = screen.getByRole('listitem', { name: 'Skills Template' })
+    expect(within(card).getByRole('link', { name: 'Abrir Skills Template' })).toHaveAttribute(
+      'href',
+      '/projects/skills-template',
+    )
+    expect(within(card).queryByText('Em breve')).not.toBeInTheDocument()
   })
 })
