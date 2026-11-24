@@ -1,8 +1,8 @@
-import type { GetStaticProps } from 'next'
+import type { GetServerSideProps } from 'next'
 import { locationOverviewRoutes } from '@/features/location-overview/navigation'
 
 /** A entrada do app é o fluxo Sprint → Squads → Alocação. */
-export const getStaticProps: GetStaticProps = async () => ({
+export const getServerSideProps: GetServerSideProps = async () => ({
   redirect: { destination: locationOverviewRoutes.sprints, permanent: false },
 })
 
